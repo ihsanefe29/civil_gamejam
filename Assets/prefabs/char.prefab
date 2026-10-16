@@ -267,15 +267,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e15aa37d3442864795fd676fec0f763, type: 3}
-<<<<<<< Updated upstream
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 6
-=======
   m_Name:
   m_EditorClassIdentifier:
   moveSpeed: 4
->>>>>>> Stashed changes
   acceleration: 45
   deceleration: 55
   jumpForce: 6
