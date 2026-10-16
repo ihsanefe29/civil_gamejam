@@ -505,11 +505,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< Updated upstream
 --- !u!1 &683107748
+=======
+--- !u!1 &1150616786
+>>>>>>> Stashed changes
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
+<<<<<<< Updated upstream
+=======
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1150616787}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1150616787
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150616786}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -11.2748375, y: -0.76555794, z: 0.009149752}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1905879867 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6010802677411808142, guid: a577f87abd8def043a8b9ea6615ac010, type: 3}
+  m_PrefabInstance: {fileID: 2738857465259117073}
+>>>>>>> Stashed changes
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
@@ -927,7 +964,15 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 619394802}
+<<<<<<< Updated upstream
   - {fileID: 363531784}
   - {fileID: 1903119518}
   - {fileID: 1829613443}
   - {fileID: 683107753}
+=======
+  - {fileID: 440921611589018052}
+  - {fileID: 2738857465259117073}
+  - {fileID: 2084311904471912158}
+  - {fileID: 1925208778}
+  - {fileID: 1150616787}
+>>>>>>> Stashed changes
