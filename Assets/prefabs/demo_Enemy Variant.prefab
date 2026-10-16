@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: demo_Enemy Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 792829876712363038, guid: cedf38579f66a7a478424514af47fb91, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2908637065651609137, guid: cedf38579f66a7a478424514af47fb91, type: 3}
       propertyPath: m_Color.b
       value: 0.1273585
