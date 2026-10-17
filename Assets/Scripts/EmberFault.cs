@@ -56,8 +56,8 @@ public class EmberFault : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player takes damage!");
-
-            fireSceneManager?.DamagePlayer();
+            if(!isExtinguished)
+                fireSceneManager?.DamagePlayer();
         }
     }
 }
