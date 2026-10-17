@@ -9,21 +9,24 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField, Min(0.1f)] private float interactionRadius = 1.55f;
 
     private readonly HashSet<Interactable> nearbyInteractables = new();
+    private InteractionPromptUI promptUi;
+
     private void Awake()
     {
         if (interactionRange == null)
             interactionRange = transform;
 
+        promptUi = GetComponent<InteractionPromptUI>();
+        if (promptUi == null)
+            promptUi = gameObject.AddComponent<InteractionPromptUI>();
     }
 
     private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.E))
-            return;
-
         Interactable nearestInteractable = GetNearestInteractable();
+        UpdatePrompt(nearestInteractable);
 
-        if (nearestInteractable != null)
+        if (Input.GetKeyDown(KeyCode.E) && nearestInteractable != null)
             nearestInteractable.Interact();
     }
 
@@ -85,6 +88,9 @@ public class PlayerInteraction : MonoBehaviour
         if (interactable == null || !interactable.isActiveAndEnabled)
             return;
 
+        if (!CanInteractNow(interactable))
+            return;
+
         bool isCollectible = interactable.GetComponent<CollectibleItem>() != null;
         if (collectiblesOnly != isCollectible)
             return;
@@ -95,5 +101,41 @@ public class PlayerInteraction : MonoBehaviour
 
         nearest = interactable;
         nearestDistanceSqr = distanceSqr;
+    }
+
+    private void UpdatePrompt(Interactable interactable)
+    {
+        if (promptUi == null)
+            return;
+
+        if (TryGetPrompt(interactable, out string prompt))
+            promptUi.Show(interactable.transform, prompt);
+        else
+            promptUi.Hide();
+    }
+
+    private static bool CanInteractNow(Interactable interactable)
+    {
+        // Objects without a prompt provider preserve the existing generic
+        // Interactable behaviour. Task objects are filtered while unavailable,
+        // so an unusable cabinet/bag never steals E from a valid nearby item.
+        foreach (MonoBehaviour behaviour in interactable.GetComponents<MonoBehaviour>())
+            if (behaviour is IInteractionPromptSource provider)
+                return provider.TryGetInteractionPrompt(out _);
+
+        return true;
+    }
+
+    private static bool TryGetPrompt(Interactable interactable, out string prompt)
+    {
+        prompt = null;
+        if (interactable == null)
+            return false;
+
+        foreach (MonoBehaviour behaviour in interactable.GetComponents<MonoBehaviour>())
+            if (behaviour is IInteractionPromptSource provider)
+                return provider.TryGetInteractionPrompt(out prompt);
+
+        return false;
     }
 }

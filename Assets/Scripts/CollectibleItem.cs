@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CollectibleItem : MonoBehaviour
+public class CollectibleItem : MonoBehaviour, IInteractionPromptSource
 {
     [SerializeField] private string itemId;
     [SerializeField] private bool hideAfterCollection = true;
@@ -8,6 +8,9 @@ public class CollectibleItem : MonoBehaviour
     [SerializeField] private bool preparationOnly = true;
 
     private bool collected;
+
+    public bool IsAvailableToCollect => !collected &&
+        (!preparationOnly || IsPreparationPhase());
 
     private void Awake()
     {
@@ -17,6 +20,7 @@ public class CollectibleItem : MonoBehaviour
         Interactable interactable = GetComponent<Interactable>();
         if (interactable != null)
             interactable.AddListener(Collect);
+
     }
 
     public void Collect()
@@ -45,6 +49,12 @@ public class CollectibleItem : MonoBehaviour
     public void Configure(string newItemId)
     {
         itemId = newItemId;
+    }
+
+    public bool TryGetInteractionPrompt(out string prompt)
+    {
+        prompt = IsAvailableToCollect ? "E - Topla" : null;
+        return prompt != null;
     }
 
     private bool IsPreparationPhase()

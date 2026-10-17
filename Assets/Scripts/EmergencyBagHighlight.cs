@@ -13,7 +13,6 @@ public class EmergencyBagHighlight : MonoBehaviour
     private Inventory inventory;
     private SpriteRenderer bagRenderer;
     private SpriteRenderer glowRenderer;
-    private TextMesh hint;
     private Vector3 originalScale;
 
     public void Configure(EmergencyBag targetBag, IEnumerable<string> itemIds)
@@ -29,7 +28,6 @@ public class EmergencyBagHighlight : MonoBehaviour
         inventory = FindFirstObjectByType<Inventory>();
         originalScale = transform.localScale;
         CreateGlow();
-        CreateHint();
         Refresh();
 
         if (inventory != null)
@@ -51,9 +49,6 @@ public class EmergencyBagHighlight : MonoBehaviour
         bool readyToDeposit = HasAcceptedInventoryItem();
         if (glowRenderer != null)
             glowRenderer.enabled = readyToDeposit;
-        if (hint != null)
-            hint.gameObject.SetActive(readyToDeposit);
-
         if (!readyToDeposit)
         {
             transform.localScale = originalScale;
@@ -77,7 +72,6 @@ public class EmergencyBagHighlight : MonoBehaviour
     {
         bool readyToDeposit = HasAcceptedInventoryItem();
         if (glowRenderer != null) glowRenderer.enabled = readyToDeposit;
-        if (hint != null) hint.gameObject.SetActive(readyToDeposit);
     }
 
     private bool HasAcceptedInventoryItem()
@@ -108,23 +102,4 @@ public class EmergencyBagHighlight : MonoBehaviour
         glowRenderer.enabled = false;
     }
 
-    private void CreateHint()
-    {
-        if (transform.Find("Bag Deposit Hint") != null) return;
-
-        GameObject hintObject = new("Bag Deposit Hint");
-        hintObject.transform.SetParent(transform, false);
-        hintObject.transform.localPosition = new Vector3(0f, 0.6f, 0f);
-
-        hint = hintObject.AddComponent<TextMesh>();
-        hint.text = "E  ÇANTAYA KOY";
-        hint.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        hint.fontSize = 32;
-        hint.characterSize = 0.018f;
-        hint.anchor = TextAnchor.MiddleCenter;
-        hint.alignment = TextAlignment.Center;
-        hint.color = new Color(1f, 0.94f, 0.55f);
-        hint.GetComponent<MeshRenderer>().sortingOrder = (bagRenderer != null ? bagRenderer.sortingOrder : 0) + 20;
-        hintObject.SetActive(false);
-    }
 }
