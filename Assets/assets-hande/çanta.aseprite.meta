@@ -158,7 +158,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: "c\u0327anta"
+    - name: "\xE7anta"
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
