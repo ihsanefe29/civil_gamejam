@@ -41,4 +41,17 @@ public class EnemyAI : MonoBehaviour
             );
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            FireSceneManager manager = FindFirstObjectByType<FireSceneManager>();
+
+            if (manager != null)
+            {
+                manager.DamagePlayer();
+            }
+        }
+    }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShootEm : MonoBehaviour
@@ -11,7 +12,9 @@ public class ShootEm : MonoBehaviour
     [SerializeField] private float attackRange = 4f;
     [SerializeField] private float attackHeight = 2f;
 
-    private bool hasWater = false;
+    [SerializeField] private LevelTaskManager taskManager;
+
+    public bool hasWater = false;
     private float lastDirection = 1f;
 
     private void Update()
@@ -31,10 +34,17 @@ public class ShootEm : MonoBehaviour
 
     public bool GiveWater()
     {
-        if (hasWater) return false;
+        Debug.Log($"BEFORE GiveWater: {hasWater} | Object: {gameObject.name} | ID: {GetInstanceID()}");
+
+        if (hasWater)
+        {
+            Debug.LogWarning("Already has water!");
+            return false;
+        }
 
         hasWater = true;
-        Debug.Log("Water collected!");
+
+        Debug.Log($"AFTER GiveWater: {hasWater}");
         return true;
     }
 
@@ -48,23 +58,43 @@ public class ShootEm : MonoBehaviour
                 0f
             );
 
-        Collider2D[] enemies = Physics2D.OverlapBoxAll(
+        Collider2D[] targets = Physics2D.OverlapBoxAll(
             center,
             new Vector2(attackRange, attackHeight),
             0f,
             enemyLayer
         );
+        int killedEnemies = 0;
 
-        foreach (Collider2D enemy in enemies)
+        foreach (Collider2D target in targets)
         {
-            Destroy(enemy.gameObject);
+            // Check if target is an Ember
+            if (target.TryGetComponent<EmberFault>(out EmberFault ember))
+            {
+                ember.Extinguish();
+                continue;
+            }
+
+            // Otherwise check if target is an Enemy
+            EnemyAI enemy = target.GetComponentInParent<EnemyAI>();
+
+            if (enemy != null)
+            {
+                killedEnemies++;
+                Destroy(enemy.gameObject);
+            }
         }
+        taskManager?.WaterShotResolved(killedEnemies);
 
         // Spawn water animation
         if (waterEffectPrefab != null)
         {
             Vector3 effectPosition = player.position +
-                new Vector3(lastDirection * attackRange / 2f, 0f, 0f);
+                new Vector3(
+                    lastDirection * attackRange / 2f,
+                    0f,
+                    0f
+                );
 
             GameObject effect = Instantiate(
                 waterEffectPrefab,

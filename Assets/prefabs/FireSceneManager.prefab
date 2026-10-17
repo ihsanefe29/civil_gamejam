@@ -44,13 +44,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e4b559efa6b42f48a6ff33207c7c8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 0}
-  player: {fileID: 0}
+  preparationDuration: 10
+  preparationInteractables:
+  - {fileID: 4901576454628008303, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+  fireInteractables:
+  - {fileID: 3298023449561153386, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
   faultyLocations:
   - {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  player: {fileID: 0}
   leftSpawnPoint: {fileID: 0}
   rightSpawnPoint: {fileID: 0}
   minSpawnInterval: 3
   maxSpawnInterval: 5
   spawnFromFaults: 1
   spawnFromBoundaries: 1
+  onFireStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  onLevelCompleted:
+    m_PersistentCalls:
+      m_Calls: []

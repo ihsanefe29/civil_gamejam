@@ -1,16 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+
+public enum FirePhase
+{
+    Preparation,
+    Fire,
+    Completed
+}
 
 public class FireSceneManager : MonoBehaviour
 {
-    [Header("Enemy References")]
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private Transform player;
+    [Header("Preparation")]
+    [SerializeField, Min(1f)]
+    private float preparationDuration = 60f;
+
+    [Header("Interactables")]
+    [SerializeField]
+    private List<GameObject> preparationInteractables = new();
+
+    [SerializeField]
+    private List<GameObject> fireInteractables = new();
 
     [Header("Faulty Locations")]
-    [SerializeField] private List<GameObject> faultyLocations = new();
+    [SerializeField]
+    private List<GameObject> faultyLocations = new();
 
+    [Header("Enemy References")]
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject player_obj;
+    private Transform transformPlayer;
     [Header("Map Spawn Points")]
     [SerializeField] private Transform leftSpawnPoint;
     [SerializeField] private Transform rightSpawnPoint;
@@ -22,66 +43,235 @@ public class FireSceneManager : MonoBehaviour
     [SerializeField] private bool spawnFromFaults = true;
     [SerializeField] private bool spawnFromBoundaries = true;
 
+    [Header("Events")]
+    [SerializeField] private UnityEvent onFireStarted;
+    [SerializeField] private UnityEvent onLevelCompleted;
+
+    [Header("Scoring")]
+    [SerializeField] private int pointsPerGlass = 10;
+    [SerializeField] private int pointsPerEmber = 20;
+
+    [Header("Player Health")]
+    [SerializeField] private int health = 3;
+
+    
+
+    public void DamagePlayer()
+    {
+        if (CurrentPhase == FirePhase.Completed)
+            return;
+
+        health--;
+
+        Debug.Log("Player Health: " + health);
+
+        if (health <= 0)
+        {
+            Debug.Log("Player Died!");
+            CompleteLevel();
+            Destroy(player_obj);
+        }
+    }
+
+    public int TotalScore { get; private set; }
+
+    public void AddScore(int points)
+    {
+        if (points <= 0) return;
+
+        TotalScore += points;
+
+        Debug.Log($"Score: +{points} | Total: {TotalScore}");
+    }
+
+    public void ScoreGlass()
+    {
+        AddScore(pointsPerGlass);
+    }
+
+    public void ScoreEmber()
+    {
+        AddScore(pointsPerEmber);
+    }
+
+    public FirePhase CurrentPhase { get; private set; }
+        = FirePhase.Preparation;
+
+    public float RemainingPreparationTime { get; private set; }
+
+    private void Awake()
+    {
+        RemainingPreparationTime = preparationDuration;
+    }
+
     private void Start()
     {
-        if (spawnFromFaults)
-            StartCoroutine(FaultSpawnRoutine());
+        transformPlayer = player_obj.transform;
+        // Preparation phase interactions
+        SetInteractables(preparationInteractables, true);
 
-        if (spawnFromBoundaries)
-            StartCoroutine(BoundarySpawnRoutine());
+        // Fire phase interactions disabled
+        SetInteractables(fireInteractables, false);
     }
 
     private void Update()
     {
-        // Manual spawn with Q
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (CurrentPhase == FirePhase.Preparation)
+        {
+            RemainingPreparationTime = Mathf.Max(
+                0f,
+                RemainingPreparationTime - Time.deltaTime
+            );
+
+            if (RemainingPreparationTime <= 0f)
+            {
+                BeginFire();
+            }
+        }
+
+        // Manual enemy spawn for testing
+        if (CurrentPhase == FirePhase.Fire &&
+            Input.GetKeyDown(KeyCode.Q))
         {
             SpawnEnemy(transform.position);
         }
     }
 
-    // Called by GlassFault.cs etc.
+    // --------------------------------
+    // PHASE MANAGEMENT
+    // --------------------------------
+
+    public void BeginFire()
+    {
+        if (CurrentPhase != FirePhase.Preparation)
+            return;
+
+        CurrentPhase = FirePhase.Fire;
+
+        // Disable preparation interactions
+        SetInteractables(preparationInteractables, false);
+
+        // Enable fire interactions
+        SetInteractables(fireInteractables, true);
+
+        // Start enemy spawning
+        if (spawnFromFaults)
+            StartCoroutine(FaultSpawnRoutine());
+
+        if (spawnFromBoundaries)
+            StartCoroutine(BoundarySpawnRoutine());
+
+        onFireStarted?.Invoke();
+
+        Debug.Log("Fire phase started!");
+    }
+
+    public void CompleteLevel()
+    {
+        if (CurrentPhase != FirePhase.Fire)
+            return;
+
+        CurrentPhase = FirePhase.Completed;
+
+        StopAllCoroutines();
+
+        SetInteractables(preparationInteractables, false);
+        SetInteractables(fireInteractables, false);
+
+        onLevelCompleted?.Invoke();
+
+        Debug.Log($"Fire level completed!\n TotalScore:{TotalScore}");
+    }
+
+    // --------------------------------
+    // INTERACTABLE MANAGEMENT
+    // --------------------------------
+
+    private void SetInteractables(
+        List<GameObject> objects,
+        bool canInteract)
+    {
+        foreach (GameObject obj in objects)
+        {
+            if (obj == null)
+                continue;
+
+            obj.tag = canInteract
+                ? "interactable"
+                : "Untagged";
+        }
+    }
+
+    // --------------------------------
+    // FAULT MANAGEMENT
+    // --------------------------------
+
     public void DeleteFromList(GameObject obj)
     {
-        faultyLocations.Remove(obj);
+        if (faultyLocations.Remove(obj))
+        {
+            Debug.Log($"Fault resolved: {obj.name}");
+        }
     }
 
     public List<GameObject> GetFaultyLocations()
     {
-        return faultyLocations;
+        return new List<GameObject>(faultyLocations);
     }
+
+    // --------------------------------
+    // ENEMY SPAWNING
+    // --------------------------------
 
     private IEnumerator FaultSpawnRoutine()
     {
-        while (true)
+        while (CurrentPhase == FirePhase.Fire)
         {
-            yield return new WaitForSeconds(GetRandomInterval());
+            yield return new WaitForSeconds(
+                GetRandomInterval()
+            );
 
-            // Create a temporary list of valid faults
+            if (CurrentPhase != FirePhase.Fire)
+                yield break;
+
             List<GameObject> availableFaults =
-                faultyLocations.FindAll(fault => fault != null);
+                faultyLocations.FindAll(
+                    fault => fault != null
+                );
 
             if (availableFaults.Count == 0)
                 continue;
 
-            int index = Random.Range(0, availableFaults.Count);
+            int randomIndex = Random.Range(
+                0,
+                availableFaults.Count
+            );
 
-            SpawnEnemy(availableFaults[index].transform.position);
+            SpawnEnemy(
+                availableFaults[randomIndex].transform.position
+            );
         }
     }
 
     private IEnumerator BoundarySpawnRoutine()
     {
-        while (true)
+        while (CurrentPhase == FirePhase.Fire)
         {
-            yield return new WaitForSeconds(GetRandomInterval());
+            yield return new WaitForSeconds(
+                GetRandomInterval()
+            );
 
-            Transform point = Random.value < 0.5f
+            if (CurrentPhase != FirePhase.Fire)
+                yield break;
+
+            Transform spawnPoint = Random.value < 0.5f
                 ? leftSpawnPoint
                 : rightSpawnPoint;
 
-            if (point != null)
-                SpawnEnemy(point.position);
+            if (spawnPoint != null)
+            {
+                SpawnEnemy(spawnPoint.position);
+            }
         }
     }
 
@@ -90,13 +280,13 @@ public class FireSceneManager : MonoBehaviour
         float min = Mathf.Max(0.1f, minSpawnInterval);
         float max = Mathf.Max(min, maxSpawnInterval);
 
-
         return Random.Range(min, max);
     }
 
     private void SpawnEnemy(Vector3 position)
     {
-        if (enemyPrefab == null) return;
+        if (enemyPrefab == null)
+            return;
 
         GameObject enemy = Instantiate(
             enemyPrefab,
@@ -108,7 +298,7 @@ public class FireSceneManager : MonoBehaviour
 
         if (follow != null)
         {
-            follow.SetTarget(player);
+            follow.SetTarget(transformPlayer);
         }
     }
 }
