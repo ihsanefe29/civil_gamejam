@@ -22,9 +22,9 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool wasGrounded;
     private bool facingRight = true;
+    private bool movementLocked;
 
     private int jumpCount = 0;
-    private Interactable interactable_Obj;
 
 
     private void Awake()
@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (movementLocked)
+            return;
+
         // -------------------------
         // MOVEMENT INPUT
         // -------------------------
@@ -57,8 +60,8 @@ public class PlayerController : MonoBehaviour
         // LANDING CHECK
         // -------------------------
 
-        // Önceki frame havadaydý
-        // þimdi yerdeyse:
+        // Ã–nceki frame havadaydÃ½
+        // Ã¾imdi yerdeyse:
         // karakter yeni yere indi.
 
         if (isGrounded && !wasGrounded)
@@ -108,6 +111,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (movementLocked)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         // -------------------------
         // HORIZONTAL MOVEMENT
         // -------------------------
@@ -116,24 +125,13 @@ public class PlayerController : MonoBehaviour
             horizontalInput * moveSpeed;
 
 
-        float speedDifference =
-            targetSpeed - rb.linearVelocity.x;
-
-
         float rate =
             Mathf.Abs(targetSpeed) > 0.01f
             ? acceleration
             : deceleration;
 
-
-        float movement =
-            speedDifference *
-            rate *
-            Time.fixedDeltaTime;
-
-
         rb.linearVelocity = new Vector2(
-            rb.linearVelocity.x + movement,
+            Mathf.MoveTowards(rb.linearVelocity.x, targetSpeed, rate * Time.fixedDeltaTime),
             rb.linearVelocity.y
         );
     }
@@ -157,6 +155,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void SetMovementLocked(bool value)
+    {
+        movementLocked = value;
+
+        if (movementLocked)
+            rb.linearVelocity = Vector2.zero;
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (groundCheck == null)
@@ -168,16 +174,5 @@ public class PlayerController : MonoBehaviour
             groundCheck.position,
             groundCheckRadius
         );
-    }
-
-
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (collision.gameObject.CompareTag("interactable"))
-                collision.GetComponent<Interactable>().Interact();
-        }
     }
 }

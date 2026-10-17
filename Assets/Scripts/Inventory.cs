@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -6,13 +7,17 @@ public class Inventory : MonoBehaviour
 {
     private readonly Dictionary<string, int> itemCounts = new();
 
+    public event Action<string, int> ItemCountChanged;
+
     public bool TryAddItem(string itemId)
     {
         if (string.IsNullOrWhiteSpace(itemId))
             return false;
 
         itemCounts.TryGetValue(itemId, out int currentCount);
-        itemCounts[itemId] = currentCount + 1;
+        int newCount = currentCount + 1;
+        itemCounts[itemId] = newCount;
+        ItemCountChanged?.Invoke(itemId, newCount);
 
         return true;
     }
@@ -27,10 +32,13 @@ public class Inventory : MonoBehaviour
         if (!itemCounts.TryGetValue(itemId, out int currentCount) || currentCount <= 0)
             return false;
 
-        if (currentCount == 1)
+        int newCount = currentCount - 1;
+        if (newCount == 0)
             itemCounts.Remove(itemId);
         else
-            itemCounts[itemId] = currentCount - 1;
+            itemCounts[itemId] = newCount;
+
+        ItemCountChanged?.Invoke(itemId, newCount);
 
         return true;
     }

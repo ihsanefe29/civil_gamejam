@@ -26,6 +26,8 @@ public class EarthquakeLevelManager : MonoBehaviour
     public float RemainingPreparationTime { get; private set; }
     public int TaskScore { get; private set; }
     public int TotalScore => CalculateTotalScore();
+    public bool IsPlayerSheltered { get; private set; }
+    public EmergencyBag ActiveEmergencyBag => emergencyBag;
 
     private void Awake()
     {
@@ -33,6 +35,19 @@ public class EarthquakeLevelManager : MonoBehaviour
 
         if (emergencyBag == null)
             emergencyBag = FindFirstObjectByType<EmergencyBag>();
+
+        if (cameraShake == null)
+            cameraShake = FindFirstObjectByType<CameraShake>();
+
+        // Every earthquake level manager owns its own preparation countdown.
+        if (GetComponent<EarthquakeCountdownUI>() == null)
+            gameObject.AddComponent<EarthquakeCountdownUI>();
+
+        if (GetComponent<InventoryHUD>() == null)
+            gameObject.AddComponent<InventoryHUD>();
+
+        if (GetComponent<EarthquakeTaskManager>() == null)
+            gameObject.AddComponent<EarthquakeTaskManager>();
     }
 
     private void Update()
@@ -69,6 +84,17 @@ public class EarthquakeLevelManager : MonoBehaviour
     public void AddTaskScore(int points)
     {
         TaskScore += Mathf.Max(0, points);
+    }
+
+    public void SetEmergencyBag(EmergencyBag bag)
+    {
+        emergencyBag = bag;
+    }
+
+    public void RegisterShelter()
+    {
+        IsPlayerSheltered = true;
+        Debug.Log("Player is safely sheltered under the table.");
     }
 
     public int CalculateTotalScore()

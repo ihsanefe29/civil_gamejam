@@ -1,37 +1,18 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable]
-public class InventoryInteractionEvent : UnityEvent<Inventory>
-{
-}
-
 public class Interactable : MonoBehaviour
 {
-    [Header("Phase")]
-    [SerializeField] private bool requiresEarthquakePhase;
-    [SerializeField] private EarthquakePhase allowedEarthquakePhase = EarthquakePhase.Preparation;
-    [SerializeField] private EarthquakeLevelManager earthquakeLevelManager;
+    public UnityEvent onInteract;
 
-    [Header("Event")]
-    [SerializeField] private InventoryInteractionEvent onInteractionAllowed;
-
-    public bool Interact(Inventory inventory)
+    public void AddListener(UnityAction listener)
     {
-        if (requiresEarthquakePhase &&
-            (earthquakeLevelManager == null ||
-             earthquakeLevelManager.CurrentPhase != allowedEarthquakePhase))
-        {
-            return false;
-        }
-
-        onInteractionAllowed?.Invoke(inventory);
-        return true;
+        onInteract ??= new UnityEvent();
+        onInteract.AddListener(listener);
     }
 
-    public bool Interact()
+    public void Interact()
     {
-        return Interact(null);
+        onInteract?.Invoke();
     }
 }

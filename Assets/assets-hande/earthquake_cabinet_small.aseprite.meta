@@ -158,7 +158,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: "dolap ku\u0308c\u0327u\u0308k son"
+    - name: earthquake_cabinet_small
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:

@@ -5,18 +5,46 @@ public class LockInstaller : MonoBehaviour
 {
     [SerializeField] private string requiredItemId = "cabinet_lock";
     [SerializeField, Min(0)] private int scoreOnInstall = 50;
+    [SerializeField] private GameObject installedLockVisual;
     [SerializeField] private EarthquakeLevelManager earthquakeLevelManager;
     [SerializeField] private UnityEvent onInstalled;
 
     private bool installed;
 
-    public void Install(Inventory inventory)
+    public bool IsInstalled => installed;
+    public event System.Action Installed;
+
+    private void Awake()
     {
+        if (installedLockVisual != null)
+            installedLockVisual.SetActive(false);
+    }
+
+    public void Install()
+    {
+        if (earthquakeLevelManager == null)
+            earthquakeLevelManager = FindFirstObjectByType<EarthquakeLevelManager>();
+
+        if (earthquakeLevelManager != null &&
+            earthquakeLevelManager.CurrentPhase != EarthquakePhase.Preparation)
+            return;
+
+        Inventory inventory = FindFirstObjectByType<Inventory>();
+
         if (installed || inventory == null || !inventory.TryRemoveItem(requiredItemId))
             return;
 
         installed = true;
+        installedLockVisual?.SetActive(true);
         earthquakeLevelManager?.AddTaskScore(scoreOnInstall);
+        Installed?.Invoke();
         onInstalled?.Invoke();
+    }
+
+    public void Configure(GameObject lockVisual, int score)
+    {
+        installedLockVisual = lockVisual;
+        scoreOnInstall = score;
+        installedLockVisual.SetActive(false);
     }
 }
