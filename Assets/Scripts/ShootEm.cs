@@ -14,6 +14,8 @@ public class ShootEm : MonoBehaviour
 
     [SerializeField] private LevelTaskManager taskManager;
 
+    [SerializeField] private Animator anim;
+
     public bool hasWater = false;
     private float lastDirection = 1f;
 
@@ -50,6 +52,7 @@ public class ShootEm : MonoBehaviour
 
     private void ShootWater()
     {
+        anim.SetTrigger("throwEvent");
         hasWater = false;
 
         Vector2 center = (Vector2)player.position +
