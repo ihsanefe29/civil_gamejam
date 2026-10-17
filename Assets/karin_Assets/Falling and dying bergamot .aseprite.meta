@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a8caed5900e8afb46aeac755d5e030ce
+guid: 84d08b30555bfd548bb855eac018ae4e
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -125,17 +125,17 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_0
     originalName: 
-    pivot: {x: 0.50793654, y: -0.033898305}
+    pivot: {x: 0.6530612, y: -0.033898305}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 4
-      width: 63
+      y: 73
+      width: 49
       height: 59
-    spriteID: 292daadddd4116d448763db58e98e79c
+    spriteID: 951bae4d378609f48859f73b1f756746
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -143,20 +143,20 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 1}
+    uvTransform: {x: 4, y: 70}
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.50793654, y: -0.033898305}
+    pivot: {x: 0.6037736, y: -0.033333335}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 75
-      y: 4
-      width: 63
-      height: 59
-    spriteID: 8dbd80844522d2e41917aaa84f57debe
+      y: 128
+      width: 53
+      height: 60
+    spriteID: edbee36329e5bc44fbc3f29c5692cdbe
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -164,41 +164,20 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 75, y: 1}
+    uvTransform: {x: 74, y: 121}
   - name: Frame_2
     originalName: 
-    pivot: {x: 0.50793654, y: -0.033898305}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 146
-      y: 4
-      width: 63
-      height: 59
-    spriteID: 77cbb3996932cd9439debfda4bee899a
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 146, y: 1}
-  - name: Frame_3
-    originalName: 
-    pivot: {x: 0.50793654, y: -0.033898305}
+    pivot: {x: 0.53968257, y: -0.016393442}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 71
+      y: 4
       width: 63
-      height: 59
-    spriteID: 73128462bc309b242b684cf62f7804aa
+      height: 61
+    spriteID: 2bf141d6663c9a74dafb8ab45c364e9b
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -206,10 +185,10 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 68}
-  - name: Frame_4
+    uvTransform: {x: 0, y: -4}
+  - name: Frame_3
     originalName: 
-    pivot: {x: 0.50793654, y: -0.033898305}
+    pivot: {x: 0.4923077, y: 0.12244898}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -217,9 +196,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 75
       y: 71
-      width: 63
-      height: 59
-    spriteID: 87c6eee04a396ac498be2fc587094d73
+      width: 65
+      height: 49
+    spriteID: 2a0b6b14c00bf164c8d66e04c413b954
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -227,20 +206,20 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 75, y: 68}
-  - name: Frame_5
+    uvTransform: {x: 71, y: 65}
+  - name: Frame_4
     originalName: 
-    pivot: {x: 0.50793654, y: -0.033898305}
+    pivot: {x: 0.4923077, y: 0.10169491}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 146
-      y: 71
-      width: 63
+      x: 75
+      y: 4
+      width: 65
       height: 59
-    spriteID: 880ab102e8c229e4088e5933c082fcd0
+    spriteID: 01039520ae65f9c41a57f28a0f247c9c
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -248,17 +227,17 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 146, y: 68}
+    uvTransform: {x: 71, y: -2}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 775735120
+      value0: 2048153796
       value1: 0
       value2: 0
       value3: 0
     guid: 0
-    name: Walking Bergamot
+    name: 'Falling and dying bergamot '
     layerFlags: 0
     layerType: 0
     blendMode: 0
@@ -270,53 +249,44 @@ ScriptedImporter:
         x: 0
         y: -1
         width: 64
-        height: 62
-      spriteId: 292daadddd4116d448763db58e98e79c
+        height: 65
+      spriteId: 951bae4d378609f48859f73b1f756746
     - name: Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: -1
-        width: 64
-        height: 62
-      spriteId: 8dbd80844522d2e41917aaa84f57debe
+        x: -1
+        y: -5
+        width: 70
+        height: 70
+      spriteId: edbee36329e5bc44fbc3f29c5692cdbe
     - name: Frame_2
       frameIndex: 2
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: -1
-        width: 64
-        height: 62
-      spriteId: 77cbb3996932cd9439debfda4bee899a
+        x: -6
+        y: -7
+        width: 75
+        height: 74
+      spriteId: 2bf141d6663c9a74dafb8ab45c364e9b
     - name: Frame_3
       frameIndex: 3
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: -1
-        width: 64
-        height: 65
-      spriteId: 73128462bc309b242b684cf62f7804aa
+        x: -4
+        y: -12
+        width: 70
+        height: 71
+      spriteId: 2a0b6b14c00bf164c8d66e04c413b954
     - name: Frame_4
       frameIndex: 4
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: -1
-        width: 64
-        height: 66
-      spriteId: 87c6eee04a396ac498be2fc587094d73
-    - name: Frame_5
-      frameIndex: 5
-      additiveSortOrder: 0
-      cellRect:
-        x: 0
-        y: -1
-        width: 64
-        height: 62
-      spriteId: 880ab102e8c229e4088e5933c082fcd0
+        x: -4
+        y: -12
+        width: 70
+        height: 76
+      spriteId: 01039520ae65f9c41a57f28a0f247c9c
     linkedCells: []
     parentIndex: -1
   platformSettings:

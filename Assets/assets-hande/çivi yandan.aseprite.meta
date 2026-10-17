@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3cbab3d116f6133428f5580a601ad7e6
+guid: a9883159d7b2ffa4fb8872d492e5a288
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,9 +123,9 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: "dolap ku\u0308c\u0327u\u0308k son"
+  - name: "c\u0327ivi yandan"
     originalName: 
-    pivot: {x: 0.50526315, y: -0.78431374}
+    pivot: {x: 0.21428572, y: -0.5555556}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -133,9 +133,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 95
-      height: 51
-    spriteID: fc86b581e0def0f479256f0f6c8eac59
+      width: 140
+      height: 36
+    spriteID: 8eecf733e2484af43b36984f15101f8e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -143,30 +143,30 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: -15}
+    uvTransform: {x: -2, y: -23}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 1353428852
+      value0: 1442442987
       value1: 0
       value2: 0
       value3: 0
     guid: 0
-    name: "dolap ku\u0308c\u0327u\u0308k son"
+    name: "c\u0327ivi yandan"
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: "dolap ku\u0308c\u0327u\u0308k son"
+    - name: "c\u0327ivi yandan"
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: 21
-        width: 96
+        x: -4
+        y: -7
+        width: 146
         height: 75
-      spriteId: fc86b581e0def0f479256f0f6c8eac59
+      spriteId: 8eecf733e2484af43b36984f15101f8e
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -185,5 +185,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 96, y: 96}
-  previousTextureSize: {x: 128, y: 64}
+  canvasSize: {x: 64, y: 64}
+  previousTextureSize: {x: 256, y: 64}

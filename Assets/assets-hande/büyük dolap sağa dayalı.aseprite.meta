@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b3433bd1e833c55489b4c8783d5de246
+guid: b7c05866a2625ac4782856becde5a234
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -158,7 +158,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: "bu\u0308yu\u0308k dolap sag\u0306a dayal\u0131"
+    - name: "b\xFCy\xFCk dolap sa\u011Fa dayal\u0131"
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:

@@ -158,7 +158,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: "c\u0327ekic\u0327"
+    - name: "\xE7eki\xE7"
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
