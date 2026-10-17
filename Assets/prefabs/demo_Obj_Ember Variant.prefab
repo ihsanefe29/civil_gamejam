@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8077484542852068875
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 614629696998355420, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254404320332206199, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: fireSceneManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4901576454628008303, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_Name
+      value: demo_Obj_Ember Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7446940863495039808, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7446940863495039808, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_Color.g
+      value: 0.48175287
+      objectReference: {fileID: 0}
+    - target: {fileID: 7446940863495039808, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6578826189414758691, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+    - {fileID: 2254404320332206199, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4901576454628008303, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2774477032618013647}
+  m_SourcePrefab: {fileID: 100100000, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+--- !u!1 &3755184833972836196 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4901576454628008303, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+  m_PrefabInstance: {fileID: 8077484542852068875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2774477032618013647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3755184833972836196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfac87b2b958b04eb1291825b6dfdc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireSceneManager: {fileID: 0}
+  animator: {fileID: 0}
+  isExtinguished: 0
