@@ -333,9 +333,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495865a6a5b96c04d80eef03dac86139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tasks: []
-  arrowPrefab: {fileID: 336623327662871570, guid: 9500900656c6af94fb91031e440a3d2c, type: 3}
-  arrowHeight: 1.5
+  fireSceneManager: {fileID: 1219407276}
+  mainCamera: {fileID: 519420031}
+  glassTargets:
+  - {fileID: 1096713451}
+  - {fileID: 788859582}
+  - {fileID: 1881141597}
+  emberTargets:
+  - {fileID: 708244410}
+  - {fileID: 583468787}
+  waterStations:
+  - {fileID: 505087345}
+  - {fileID: 221169536}
+  - {fileID: 1242700029}
+  requiredEnemyKills: 5
+  arrowPrefab: {fileID: 3083652290128391743, guid: 9500900656c6af94fb91031e440a3d2c, type: 3}
 --- !u!4 &573371047
 Transform:
   m_ObjectHideFlags: 0
@@ -652,6 +664,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1905879867}
     - target: {fileID: 4808624839000481032, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
+      propertyPath: taskManager
+      value: 
+      objectReference: {fileID: 573371046}
+    - target: {fileID: 4808624839000481032, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
       propertyPath: waterPlayer
       value: 
       objectReference: {fileID: 1841725737}
@@ -752,6 +768,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2774477032618013647, guid: e1159ec3a23787a4688cc7c85d6b4f93, type: 3}
+      propertyPath: taskManager
+      value: 
+      objectReference: {fileID: 573371046}
+    - target: {fileID: 2774477032618013647, guid: e1159ec3a23787a4688cc7c85d6b4f93, type: 3}
+      propertyPath: fireSceneManager
+      value: 
+      objectReference: {fileID: 1219407276}
     - target: {fileID: 3755184833972836196, guid: e1159ec3a23787a4688cc7c85d6b4f93, type: 3}
       propertyPath: m_Name
       value: demo_Obj_Ember (1)
@@ -952,6 +976,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1905879867}
     - target: {fileID: 4808624839000481032, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
+      propertyPath: taskManager
+      value: 
+      objectReference: {fileID: 573371046}
+    - target: {fileID: 4808624839000481032, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
       propertyPath: waterPlayer
       value: 
       objectReference: {fileID: 1841725737}
@@ -1087,6 +1115,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1905879867}
     - target: {fileID: 4808624839000481032, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
+      propertyPath: taskManager
+      value: 
+      objectReference: {fileID: 573371046}
+    - target: {fileID: 4808624839000481032, guid: fc050883c968efb4581ce0a7532334b7, type: 3}
       propertyPath: waterPlayer
       value: 
       objectReference: {fileID: 1841725737}
@@ -1165,7 +1197,7 @@ PrefabInstance:
       objectReference: {fileID: 1443176177}
     - target: {fileID: 4125669465265635775, guid: be25ba6ea505440428ea1bb1bfda6bdb, type: 3}
       propertyPath: preparationDuration
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4125669465265635775, guid: be25ba6ea505440428ea1bb1bfda6bdb, type: 3}
       propertyPath: faultyLocations.Array.size
@@ -1309,6 +1341,10 @@ PrefabInstance:
       propertyPath: attackRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 205438362510836208, guid: 1820804b0c65655489a17cc8b235048b, type: 3}
+      propertyPath: taskManager
+      value: 
+      objectReference: {fileID: 573371046}
     - target: {fileID: 6018467977358903800, guid: 1820804b0c65655489a17cc8b235048b, type: 3}
       propertyPath: m_Name
       value: ShootEm
@@ -1435,6 +1471,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2774477032618013647, guid: e1159ec3a23787a4688cc7c85d6b4f93, type: 3}
+      propertyPath: taskManager
+      value: 
+      objectReference: {fileID: 573371046}
     - target: {fileID: 2774477032618013647, guid: e1159ec3a23787a4688cc7c85d6b4f93, type: 3}
       propertyPath: fireSceneManager
       value: 
@@ -1577,5 +1617,5 @@ SceneRoots:
   - {fileID: 1573432945}
   - {fileID: 2019032740}
   - {fileID: 1038249860}
-  - {fileID: 1540666507}
   - {fileID: 573371047}
+  - {fileID: 1540666507}
