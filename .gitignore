@@ -73,3 +73,24 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# VS Code
+.vscode/
+.vscode/**
+
+# VS Code workspace files
+*.code-workspace
+
+# JetBrains
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Python cache (if any)
+__pycache__/
+
+# TextMesh Pro demo files
+/[Aa]ssets/TextMesh Pro/Examples & Extras/
