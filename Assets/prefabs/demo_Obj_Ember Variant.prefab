@@ -18,11 +18,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.11
+      value: 2.85
       objectReference: {fileID: 0}
     - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.08
+      value: -1.97
       objectReference: {fileID: 0}
     - target: {fileID: 4184323567581890825, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
       propertyPath: m_LocalPosition.z
@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: demo_Obj_Ember Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4901576454628008303, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7446940863495039808, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
       propertyPath: m_Color.b
       value: 0
@@ -75,6 +79,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6578826189414758691, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
     - {fileID: 2254404320332206199, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
+    - {fileID: -3860499521492393941, guid: ba3f960dc29d7134b90c68d7b3b5e010, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -102,3 +107,4 @@ MonoBehaviour:
   fireSceneManager: {fileID: 0}
   animator: {fileID: 0}
   isExtinguished: 0
+  taskManager: {fileID: 0}
