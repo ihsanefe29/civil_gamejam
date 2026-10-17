@@ -125,7 +125,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: "dolap ku\u0308c\u0327u\u0308k son"
     originalName: 
-    pivot: {x: 0.50526315, y: -0.78431374}
+    pivot: {x: 0.496, y: -1.881356}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
