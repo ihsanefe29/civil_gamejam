@@ -19,7 +19,8 @@ public class EarthquakeCountdownUI : MonoBehaviour
         if (levelManager == null || countdownRoot == null)
             return;
 
-        bool isPreparing = levelManager.CurrentPhase == EarthquakePhase.Preparation;
+        bool isPreparing = levelManager.CurrentPhase == EarthquakePhase.Preparation &&
+                           !levelManager.IsEarlyEarthquakeStarting;
         if (countdownRoot.activeSelf != isPreparing)
             countdownRoot.SetActive(isPreparing);
 

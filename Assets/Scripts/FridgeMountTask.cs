@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class FridgeMountTask : MonoBehaviour
+public class FridgeMountTask : MonoBehaviour, IInteractionPromptSource
 {
     [SerializeField, Min(0)] private int scoreOnCompletion = 50;
     [SerializeField] private EarthquakeLevelManager earthquakeLevelManager;
@@ -33,7 +33,6 @@ public class FridgeMountTask : MonoBehaviour
         IsMounted = true;
         earthquakeLevelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
         earthquakeLevelManager?.AddTaskScore(scoreOnCompletion);
-        CreateMountedLabel();
         Completed?.Invoke();
     }
 
@@ -43,21 +42,10 @@ public class FridgeMountTask : MonoBehaviour
         return earthquakeLevelManager == null || earthquakeLevelManager.CurrentPhase == EarthquakePhase.Preparation;
     }
 
-    private void CreateMountedLabel()
+    public bool TryGetInteractionPrompt(out string prompt)
     {
-        if (transform.Find("Fridge Secured Label") != null) return;
-
-        GameObject labelObject = new("Fridge Secured Label");
-        labelObject.transform.SetParent(transform, false);
-        labelObject.transform.localPosition = new Vector3(0f, 0.7f, 0f);
-        TextMesh label = labelObject.AddComponent<TextMesh>();
-        label.text = "✓ SABİTLENDİ";
-        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        label.fontSize = 28;
-        label.characterSize = 0.012f;
-        label.anchor = TextAnchor.MiddleCenter;
-        label.alignment = TextAlignment.Center;
-        label.color = new Color(0.45f, 1f, 0.55f);
-        label.GetComponent<MeshRenderer>().sortingOrder = 100;
+        bool canMount = !IsMounted && IsPreparationPhase();
+        prompt = canMount ? "E - Sabitle" : null;
+        return canMount;
     }
 }

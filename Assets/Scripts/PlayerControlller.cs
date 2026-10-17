@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded;
     private bool facingRight = true;
     private bool movementLocked;
+    public bool IsDead { get; private set; }
 
     private int jumpCount = 0;
 
@@ -157,10 +158,26 @@ public class PlayerController : MonoBehaviour
 
     public void SetMovementLocked(bool value)
     {
+        if (IsDead) return;
+
         movementLocked = value;
 
         if (movementLocked)
             rb.linearVelocity = Vector2.zero;
+    }
+
+    public void Die()
+    {
+        if (IsDead) return;
+
+        IsDead = true;
+        movementLocked = true;
+        horizontalInput = 0f;
+        rb.linearVelocity = Vector2.zero;
+
+        PlayerInteraction interaction = GetComponent<PlayerInteraction>();
+        if (interaction != null)
+            interaction.enabled = false;
     }
 
     private void OnDrawGizmosSelected()

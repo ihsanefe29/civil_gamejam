@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class LockInstaller : MonoBehaviour
+public class LockInstaller : MonoBehaviour, IInteractionPromptSource
 {
     [SerializeField] private string requiredItemId = "cabinet_lock";
     [SerializeField, Min(0)] private int scoreOnInstall = 50;
@@ -46,5 +46,20 @@ public class LockInstaller : MonoBehaviour
         installedLockVisual = lockVisual;
         scoreOnInstall = score;
         installedLockVisual.SetActive(false);
+    }
+
+    public bool TryGetInteractionPrompt(out string prompt)
+    {
+        earthquakeLevelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
+        Inventory inventory = FindFirstObjectByType<Inventory>();
+
+        bool canInstall = !installed &&
+                          (earthquakeLevelManager == null ||
+                           earthquakeLevelManager.CurrentPhase == EarthquakePhase.Preparation) &&
+                          inventory != null &&
+                          inventory.HasItem(requiredItemId);
+
+        prompt = canInstall ? "E - Kilitle" : null;
+        return canInstall;
     }
 }

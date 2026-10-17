@@ -7,6 +7,7 @@ public class BergamotWalkAnimator : MonoBehaviour
     [SerializeField, Min(1f)] private float framesPerSecond = 10f;
     [SerializeField] private Rigidbody2D targetRigidbody;
     private SpriteRenderer spriteRenderer;
+    private Animator animatorController;
     private float elapsed;
     private int frameIndex;
 
@@ -19,10 +20,18 @@ public class BergamotWalkAnimator : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (targetRigidbody == null) targetRigidbody = GetComponent<Rigidbody2D>();
+        animatorController = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        // When this player has an Animator Controller, it is the single owner
+        // of the sprite. Otherwise this legacy script would overwrite the
+        // Crouch frame every Update even after the Animator changed state.
+        if (animatorController != null && animatorController.enabled &&
+            animatorController.runtimeAnimatorController != null)
+            return;
+
         if (walkFrames == null || walkFrames.Length == 0) return;
         if (targetRigidbody == null || Mathf.Abs(targetRigidbody.linearVelocity.x) < 0.05f)
         {
@@ -31,10 +40,18 @@ public class BergamotWalkAnimator : MonoBehaviour
             frameIndex = 0;
             return;
         }
-        elapsed += Time.deltaTime;
-        if (elapsed < 1f / framesPerSecond) return;
-        elapsed = 0f;
-        frameIndex = (frameIndex + 1) % walkFrames.Length;
-        spriteRenderer.sprite = walkFrames[frameIndex];
+        Animate(walkFrames, framesPerSecond);
     }
+
+    private void Animate(Sprite[] frames, float animationFramesPerSecond)
+    {
+        if (frames == null || frames.Length == 0) return;
+
+        spriteRenderer.sprite = frames[frameIndex % frames.Length];
+        elapsed += Time.deltaTime;
+        if (elapsed < 1f / animationFramesPerSecond) return;
+        elapsed = 0f;
+        frameIndex = (frameIndex + 1) % frames.Length;
+    }
+
 }
