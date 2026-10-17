@@ -52,7 +52,7 @@ public class FireSceneManager : MonoBehaviour
     [SerializeField] private int pointsPerEmber = 20;
 
     [Header("Player Health")]
-    [SerializeField] private int health = 3;
+    [SerializeField] private int health = 100;
 
     
 

@@ -294,4 +294,22 @@ public class LevelTaskManager : MonoBehaviour
 
         RefreshArrows();
     }
+    public int RemainingGlassCount => CountRemainingTargets(glassTargets);
+    public int RemainingEmberCount => CountRemainingTargets(emberTargets);
+    public bool HasWaterForTask => hasWaterForTask;
+    public int EnemyKillCount => enemyKills;
+    public int RequiredEnemyKills => requiredEnemyKills;
+
+    private static int CountRemainingTargets(List<GameObject> targets)
+    {
+        int count = 0;
+
+        foreach (GameObject target in targets)
+        {
+            if (target != null)
+                count++;
+        }
+
+        return count;
+    }
 }

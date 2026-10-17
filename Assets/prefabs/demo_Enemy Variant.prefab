@@ -16,6 +16,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 792829876712363038, guid: cedf38579f66a7a478424514af47fb91, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1461973136804072530, guid: cedf38579f66a7a478424514af47fb91, type: 3}
+      propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2908637065651609137, guid: cedf38579f66a7a478424514af47fb91, type: 3}
       propertyPath: m_Color.b
       value: 0.1273585
@@ -42,11 +50,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8436617999775382648, guid: cedf38579f66a7a478424514af47fb91, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.04
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8436617999775382648, guid: cedf38579f66a7a478424514af47fb91, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.63
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8436617999775382648, guid: cedf38579f66a7a478424514af47fb91, type: 3}
       propertyPath: m_LocalPosition.z
@@ -80,7 +88,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6214190973456100201, guid: cedf38579f66a7a478424514af47fb91, type: 3}
+    - {fileID: 1461973136804072530, guid: cedf38579f66a7a478424514af47fb91, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
