@@ -8,7 +8,8 @@ public enum FirePhase
 {
     Preparation,
     Fire,
-    Completed
+    Completed,
+    Intro
 }
 
 public class FireSceneManager : MonoBehaviour
@@ -54,7 +55,12 @@ public class FireSceneManager : MonoBehaviour
     [Header("Player Health")]
     [SerializeField] private int health = 100;
 
-    
+    [Header("Exit Portal")]
+    [SerializeField] private GameObject exitPortal;
+
+    [SerializeField] private PortalReveal portalReveal;
+
+
 
     public void DamagePlayer()
     {
@@ -95,7 +101,7 @@ public class FireSceneManager : MonoBehaviour
     }
 
     public FirePhase CurrentPhase { get; private set; }
-        = FirePhase.Preparation;
+        = FirePhase.Intro;
 
     public float RemainingPreparationTime { get; private set; }
 
@@ -106,14 +112,23 @@ public class FireSceneManager : MonoBehaviour
 
     private void Start()
     {
-        transformPlayer = player_obj.transform;
-        // Preparation phase interactions
-        SetInteractables(preparationInteractables, true);
+        if (player_obj != null)
+            transformPlayer = player_obj.transform;
 
-        // Fire phase interactions disabled
+        SetInteractables(preparationInteractables, false);
         SetInteractables(fireInteractables, false);
     }
+    public void BeginPreparation()
+    {
+        if (CurrentPhase != FirePhase.Intro)
+            return;
 
+        RemainingPreparationTime = preparationDuration;
+        CurrentPhase = FirePhase.Preparation;
+
+        SetInteractables(preparationInteractables, true);
+        SetInteractables(fireInteractables, false);
+    }
     private void Update()
     {
         if (CurrentPhase == FirePhase.Preparation)
@@ -127,13 +142,6 @@ public class FireSceneManager : MonoBehaviour
             {
                 BeginFire();
             }
-        }
-
-        // Manual enemy spawn for testing
-        if (CurrentPhase == FirePhase.Fire &&
-            Input.GetKeyDown(KeyCode.Q))
-        {
-            SpawnEnemy(transform.position);
         }
     }
 
@@ -173,14 +181,23 @@ public class FireSceneManager : MonoBehaviour
 
         CurrentPhase = FirePhase.Completed;
 
+        // Stop both enemy spawn routines.
         StopAllCoroutines();
 
         SetInteractables(preparationInteractables, false);
         SetInteractables(fireInteractables, false);
 
+        if (health > 0 && exitPortal != null)
+        {
+            if (portalReveal != null)
+                portalReveal.Play();
+            else
+                exitPortal.SetActive(true);
+        }
+
         onLevelCompleted?.Invoke();
 
-        Debug.Log($"Fire level completed!\n TotalScore:{TotalScore}");
+        Debug.Log($"Fire level completed! TotalScore: {TotalScore}");
     }
 
     // --------------------------------
@@ -291,7 +308,7 @@ public class FireSceneManager : MonoBehaviour
         GameObject enemy = Instantiate(
             enemyPrefab,
             position,
-            Quaternion.Euler(0f, 0f, 90f)
+            Quaternion.identity
         );
 
         EnemyAI follow = enemy.GetComponent<EnemyAI>();

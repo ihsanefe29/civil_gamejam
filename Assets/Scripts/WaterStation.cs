@@ -7,25 +7,29 @@ public class WaterStation : MonoBehaviour
     [SerializeField] private ShootEm waterPlayer;
 
     [Header("Settings")]
-    [SerializeField] private float refillTime = 30f;
+    [SerializeField] private float refillTime = 5f;
 
     [SerializeField] private LevelTaskManager taskManager;
 
     private float nextAvailableTime = 0f;
-    private SpriteRenderer clr;
-    private Color og_Color;
+    [SerializeField] private Sprite empty_sprt;
+    private SpriteRenderer rndr;
+    private Sprite full_sprt;
+    private bool waterFull = true;
 
     // Called by Interactable's UnityEvent
     private void Awake()
     {
-        clr = this.gameObject.GetComponent<SpriteRenderer>();
-        og_Color = clr.color;
+        rndr = this.gameObject.GetComponent<SpriteRenderer>();
+        full_sprt = rndr.sprite;
+
     }
     private void Update()
     {
-        if (clr.color == Color.gray && Time.time >= nextAvailableTime)
+        if (waterFull == false && Time.time >= nextAvailableTime)
         {
-            clr.color = og_Color;
+            waterFull = true;
+            rndr.sprite = full_sprt;
 
             Debug.Log("WaterStation refilled!");
         }
@@ -48,9 +52,10 @@ public class WaterStation : MonoBehaviour
 
         if (waterPlayer.GiveWater())
         {
+            waterFull = false;
             nextAvailableTime = Time.time + refillTime;
-            Debug.Log("Water collected successfully!");
-            clr.color = Color.gray;
+            Debug.Log("Water collected successfully!: " + empty_sprt.name);
+            rndr.sprite = empty_sprt;
 
             taskManager?.WaterCollected();
         }

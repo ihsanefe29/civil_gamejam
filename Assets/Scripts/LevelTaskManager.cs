@@ -7,7 +7,8 @@ public enum ObjectiveStage
     GetWater,
     ExtinguishEmbers,
     DefeatEnemies,
-    Completed
+    Completed,
+    EnterPortal
 }
 
 public class LevelTaskManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class LevelTaskManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private FireSceneManager fireSceneManager;
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private ShootEm waterPlayer;
 
     [Header("Preparation Targets")]
     [SerializeField] private List<GameObject> glassTargets = new();
@@ -29,14 +31,24 @@ public class LevelTaskManager : MonoBehaviour
     [Header("Arrow")]
     [SerializeField] private ObjectiveArrow arrowPrefab;
 
+    [Header("Exit Portal")]
+    [SerializeField] private GameObject exitPortal;
+
     private readonly Dictionary<Transform, ObjectiveArrow> arrows = new();
     private readonly HashSet<Transform> activeTargets = new();
 
-    private bool hasWaterForTask = false;
-    private int enemyKills = 0;
+    private int enemyKills;
 
     private float nextRefreshTime;
     private const float refreshInterval = 0.15f;
+
+    public bool HasWaterForTask =>
+        waterPlayer != null && waterPlayer.hasWater;
+
+    public int RemainingGlassCount => CountRemainingTargets(glassTargets);
+    public int RemainingEmberCount => CountRemainingTargets(emberTargets);
+    public int EnemyKillCount => enemyKills;
+    public int RequiredEnemyKills => requiredEnemyKills;
 
     public ObjectiveStage CurrentStage
     {
@@ -47,17 +59,24 @@ public class LevelTaskManager : MonoBehaviour
 
             FirePhase phase = fireSceneManager.CurrentPhase;
 
-            if (phase == FirePhase.Completed)
+            if (phase == FirePhase.Intro)
                 return ObjectiveStage.Completed;
+
+            if (phase == FirePhase.Completed)
+            {
+                return exitPortal != null && exitPortal.activeInHierarchy
+                    ? ObjectiveStage.EnterPortal
+                    : ObjectiveStage.Completed;
+            }
 
             if (phase == FirePhase.Preparation)
             {
-                if (glassTargets.Count > 0)
+                if (RemainingGlassCount > 0)
                     return ObjectiveStage.CollectGlass;
 
-                if (emberTargets.Count > 0)
+                if (RemainingEmberCount > 0)
                 {
-                    return hasWaterForTask
+                    return HasWaterForTask
                         ? ObjectiveStage.ExtinguishEmbers
                         : ObjectiveStage.GetWater;
                 }
@@ -68,7 +87,7 @@ public class LevelTaskManager : MonoBehaviour
             if (enemyKills >= requiredEnemyKills)
                 return ObjectiveStage.Completed;
 
-            return hasWaterForTask
+            return HasWaterForTask
                 ? ObjectiveStage.DefeatEnemies
                 : ObjectiveStage.GetWater;
         }
@@ -79,6 +98,9 @@ public class LevelTaskManager : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
+        if (waterPlayer == null)
+            waterPlayer = FindFirstObjectByType<ShootEm>();
+
         RefreshArrows();
     }
 
@@ -88,26 +110,17 @@ public class LevelTaskManager : MonoBehaviour
             return;
 
         nextRefreshTime = Time.time + refreshInterval;
-
         RefreshArrows();
     }
 
-    // --------------------------------
-    // ARROW MANAGEMENT
-    // --------------------------------
-
     private void RefreshArrows()
     {
-        if (fireSceneManager == null ||
-            mainCamera == null ||
-            arrowPrefab == null)
+        if (fireSceneManager == null)
             return;
 
-        // Remove destroyed objects from lists
         glassTargets.RemoveAll(glass => glass == null);
         emberTargets.RemoveAll(ember => ember == null);
 
-        // Start fire when all preparation tasks are completed
         if (fireSceneManager.CurrentPhase == FirePhase.Preparation &&
             glassTargets.Count == 0 &&
             emberTargets.Count == 0)
@@ -115,13 +128,21 @@ public class LevelTaskManager : MonoBehaviour
             fireSceneManager.BeginFire();
         }
 
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+        if (mainCamera == null || arrowPrefab == null)
+            return;
+
         activeTargets.Clear();
 
-        // Find all targets for the current objective
         switch (CurrentStage)
         {
+            case ObjectiveStage.EnterPortal:
+                if (exitPortal != null)
+                    AddTarget(exitPortal.transform);
+                break;
             case ObjectiveStage.CollectGlass:
-
                 foreach (GameObject glass in glassTargets)
                 {
                     if (glass != null)
@@ -130,9 +151,6 @@ public class LevelTaskManager : MonoBehaviour
                 break;
 
             case ObjectiveStage.GetWater:
-
-                // Show arrows on every water station
-                // even if empty or refilling
                 foreach (WaterStation station in waterStations)
                 {
                     if (station != null)
@@ -141,7 +159,6 @@ public class LevelTaskManager : MonoBehaviour
                 break;
 
             case ObjectiveStage.ExtinguishEmbers:
-
                 foreach (GameObject ember in emberTargets)
                 {
                     if (ember != null)
@@ -150,7 +167,6 @@ public class LevelTaskManager : MonoBehaviour
                 break;
 
             case ObjectiveStage.DefeatEnemies:
-
                 EnemyAI[] enemies = FindObjectsByType<EnemyAI>(
                     FindObjectsSortMode.None
                 );
@@ -163,7 +179,6 @@ public class LevelTaskManager : MonoBehaviour
                 break;
         }
 
-        // Find arrows that are no longer needed
         List<Transform> toRemove = new();
 
         foreach (var pair in arrows)
@@ -178,94 +193,62 @@ public class LevelTaskManager : MonoBehaviour
             }
         }
 
-        // Remove old arrow references
         foreach (Transform target in toRemove)
-        {
             arrows.Remove(target);
-        }
 
-        // Create arrows for new targets
         foreach (Transform target in activeTargets)
         {
             if (arrows.ContainsKey(target))
                 continue;
 
             ObjectiveArrow arrow = Instantiate(arrowPrefab);
-
             arrow.Initialize(target, mainCamera);
-
             arrows.Add(target, arrow);
         }
     }
+
     private void AddTarget(Transform target)
     {
         if (target != null && target.gameObject.activeInHierarchy)
-        {
             activeTargets.Add(target);
-        }
     }
-
-    // --------------------------------
-    // GLASS / EMBER TASKS
-    // --------------------------------
 
     public void CompleteTask(GameObject obj)
     {
         if (obj == null || fireSceneManager == null)
             return;
 
-        // Preparation only
         if (fireSceneManager.CurrentPhase != FirePhase.Preparation)
             return;
 
-        // Remove completed glass regardless of current stage
         if (glassTargets.Remove(obj))
-        {
             Debug.Log("Glass collected: " + obj.name);
-        }
 
-        // Remove extinguished ember regardless of current stage
         if (emberTargets.Remove(obj))
-        {
             Debug.Log("Ember extinguished: " + obj.name);
-        }
-
-        // Start fire if all preparation objectives are complete
-        if (glassTargets.Count == 0 && emberTargets.Count == 0)
-        {
-            fireSceneManager.BeginFire();
-        }
 
         RefreshArrows();
     }
-
-    // --------------------------------
-    // WATER COLLECTION
-    // --------------------------------
 
     public void WaterCollected()
     {
-        if (CurrentStage != ObjectiveStage.GetWater)
-            return;
-
-        hasWaterForTask = true;
-
-        Debug.Log("Water collected! Next objective.");
-
+        // ShootEm.GiveWater() has already updated hasWater.
+        // Refresh even if water was collected before its objective.
         RefreshArrows();
     }
 
-    // --------------------------------
-    // WATER ATTACK
-    // --------------------------------
-
     public void WaterShotResolved(int killedCount)
     {
-        if (!hasWaterForTask || fireSceneManager == null)
+        if (fireSceneManager == null)
             return;
 
         FirePhase phase = fireSceneManager.CurrentPhase;
 
+        if (phase == FirePhase.Completed)
+            return;
+
+        // Do not check hasWater here:
+        // the shot has already consumed the player's water.
         if (phase == FirePhase.Fire)
         {
             enemyKills += Mathf.Max(0, killedCount);
@@ -273,32 +256,14 @@ public class LevelTaskManager : MonoBehaviour
             Debug.Log(
                 $"Enemies defeated: {enemyKills}/{requiredEnemyKills}"
             );
+
+            if (enemyKills >= requiredEnemyKills)
+                fireSceneManager.CompleteLevel();
         }
 
-        hasWaterForTask = false;
-
-        // All preparation tasks completed
-        if (phase == FirePhase.Preparation &&
-            glassTargets.Count == 0 &&
-            emberTargets.Count == 0)
-        {
-            fireSceneManager.BeginFire();
-        }
-
-        // Required enemies defeated
-        else if (phase == FirePhase.Fire &&
-                 enemyKills >= requiredEnemyKills)
-        {
-            fireSceneManager.CompleteLevel();
-        }
-
+        // Read the current water state without overwriting it.
         RefreshArrows();
     }
-    public int RemainingGlassCount => CountRemainingTargets(glassTargets);
-    public int RemainingEmberCount => CountRemainingTargets(emberTargets);
-    public bool HasWaterForTask => hasWaterForTask;
-    public int EnemyKillCount => enemyKills;
-    public int RequiredEnemyKills => requiredEnemyKills;
 
     private static int CountRemainingTargets(List<GameObject> targets)
     {
@@ -311,5 +276,16 @@ public class LevelTaskManager : MonoBehaviour
         }
 
         return count;
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var pair in arrows)
+        {
+            if (pair.Value != null)
+                Destroy(pair.Value.gameObject);
+        }
+
+        arrows.Clear();
     }
 }

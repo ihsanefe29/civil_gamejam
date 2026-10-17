@@ -32,7 +32,7 @@ public class EmberFault : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetBool("isExtinguished", true);
+            animator.SetTrigger("downFire");
         }
 
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();

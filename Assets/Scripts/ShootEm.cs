@@ -16,6 +16,10 @@ public class ShootEm : MonoBehaviour
 
     [SerializeField] private Animator anim;
 
+    [Header("Water Visual")]
+    [SerializeField] private float waterEffectHeight = 0.35f;
+    [SerializeField] private float waterEffectYOffset = -0.3f;
+
     public bool hasWater = false;
     private float lastDirection = 1f;
 
@@ -49,7 +53,14 @@ public class ShootEm : MonoBehaviour
         Debug.Log($"AFTER GiveWater: {hasWater}");
         return true;
     }
+    private System.Collections.IEnumerator DestroyAfterDelay(
+    GameObject target, float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
+        if (target != null)
+            Destroy(target);
+    }
     private void ShootWater()
     {
         anim.SetTrigger("throwEvent");
@@ -83,29 +94,43 @@ public class ShootEm : MonoBehaviour
 
             if (enemy != null)
             {
-                killedEnemies++;
-                Destroy(enemy.gameObject);
+                if (enemy != null)
+                {
+                    killedEnemies++;
+                    StartCoroutine(DestroyAfterDelay(enemy.gameObject, 0.1f));
+                }
             }
         }
         taskManager?.WaterShotResolved(killedEnemies);
 
-        // Spawn water animation
+        // Spawn flowing water from the bucket.
         if (waterEffectPrefab != null)
         {
             Vector3 effectPosition = player.position +
                 new Vector3(
-                    lastDirection * attackRange / 2f,
-                    0f,
+                    lastDirection * 0.3f,
+                    waterEffectYOffset,
                     0f
                 );
+
+            Quaternion effectRotation = Quaternion.Euler(
+                0f,
+                0f,
+                lastDirection > 0f ? 0f : 180f
+            );
 
             GameObject effect = Instantiate(
                 waterEffectPrefab,
                 effectPosition,
-                Quaternion.identity
+                effectRotation
             );
 
-            Destroy(effect, 0.5f);
+            ParticleSystem particles = effect.GetComponentInChildren<ParticleSystem>();
+
+            if (particles != null)
+                particles.Play(true);
+
+            Destroy(effect, 1f);
         }
     }
 

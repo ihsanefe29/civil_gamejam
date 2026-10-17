@@ -66,6 +66,10 @@ public class FireSceneUI : MonoBehaviour
 
         switch (fireSceneManager.CurrentPhase)
         {
+            case FirePhase.Intro:
+                label = "";
+                break;
+
             case FirePhase.Preparation:
                 {
                     int glassCount = taskManager.RemainingGlassCount;
