@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3cbab3d116f6133428f5580a601ad7e6
+guid: c110b50b40af2844f87e4d0c7e5837b9
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,9 +123,9 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: "dolap ku\u0308c\u0327u\u0308k son"
+  - name: kedi 2
     originalName: 
-    pivot: {x: 0.50526315, y: -0.78431374}
+    pivot: {x: 0.44186047, y: -0.2}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -133,9 +133,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 95
-      height: 51
-    spriteID: fc86b581e0def0f479256f0f6c8eac59
+      width: 86
+      height: 95
+    spriteID: 8148a8b661aa55445aa1e7b9bf841704
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -143,30 +143,30 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: -15}
+    uvTransform: {x: 4, y: 3}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 1353428852
+      value0: 756974353
       value1: 0
       value2: 0
       value3: 0
     guid: 0
-    name: "dolap ku\u0308c\u0327u\u0308k son"
+    name: kedi 2
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: "dolap ku\u0308c\u0327u\u0308k son"
+    - name: kedi 2
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: 21
-        width: 96
-        height: 75
-      spriteId: fc86b581e0def0f479256f0f6c8eac59
+        x: 26
+        y: 18
+        width: 86
+        height: 100
+      spriteId: 8148a8b661aa55445aa1e7b9bf841704
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -185,5 +185,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 96, y: 96}
-  previousTextureSize: {x: 128, y: 64}
+  canvasSize: {x: 128, y: 128}
+  previousTextureSize: {x: 128, y: 128}

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 36f68d87b4c080549a76d250ff9a3722
+guid: 8823046c4b285be4c82c153310c120d3
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -158,7 +158,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: "ku\u0308c\u0327u\u0308k dolap son"
+    - name: "k\xFC\xE7\xFCk dolap son"
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
