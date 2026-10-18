@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 
 public class EarthquakeShelter : MonoBehaviour, IInteractionPromptSource
 {
@@ -16,6 +17,7 @@ public class EarthquakeShelter : MonoBehaviour, IInteractionPromptSource
     [SerializeField, Min(0f)] private float restoreDelayAfterEarthquake = 1f;
     [Header("Animator Triggers")]
     [SerializeField] private string normalTrigger = "normal";
+    
 
     private bool sheltered;
     private bool restoreQueued;
@@ -209,7 +211,7 @@ public class EarthquakeShelter : MonoBehaviour, IInteractionPromptSource
                           earthquakeLevelManager != null &&
                           earthquakeLevelManager.CurrentPhase == EarthquakePhase.Earthquake;
 
-        prompt = canShelter ? "E - Masanın Altına Saklan" : null;
+        prompt = canShelter ? "E - Take Cover" : null;
         return canShelter;
     }
 }

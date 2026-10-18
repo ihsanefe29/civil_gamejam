@@ -65,12 +65,12 @@ public class EarthquakeTaskListUI : MonoBehaviour
     {
         if (taskText == null || taskManager == null) return;
 
-        taskText.text = "DEPREM HAZIRLIĞI\n\n" +
+        taskText.text = "EARTHQUAKE PREPAREDNESS\n\n" +
                         TaskLine(taskManager.InstalledLockCount >= EarthquakeTaskManager.RequiredLocks,
-                            $"Dolapları kilitle ({taskManager.InstalledLockCount}/{EarthquakeTaskManager.RequiredLocks})") + "\n" +
+                            $"Lock cabinets ({taskManager.InstalledLockCount}/{EarthquakeTaskManager.RequiredLocks})") + "\n" +
                         TaskLine(taskManager.BagItemCount >= EarthquakeTaskManager.RequiredBagItems,
-                            $"Deprem çantasını hazırla ({taskManager.BagItemCount}/{EarthquakeTaskManager.RequiredBagItems})") + "\n" +
-                        TaskLine(taskManager.IsFridgeSecured, "Buzdolabını sabitle");
+                            $"Pack emergency bag ({taskManager.BagItemCount}/{EarthquakeTaskManager.RequiredBagItems})") + "\n" +
+                        TaskLine(taskManager.IsFridgeSecured, "Secure refrigerator");
     }
 
     private static string TaskLine(bool done, string label) => done ? $"✓  {label}" : $"☐  {label}";

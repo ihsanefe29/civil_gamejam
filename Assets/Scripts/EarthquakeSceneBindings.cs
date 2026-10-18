@@ -195,7 +195,7 @@ public class EarthquakeSceneBindings : MonoBehaviour
         GameObject lockPickup = FindByExactName("kilit ve zincir (1)");
         if (cabinet == null || lockPickup == null) return;
 
-        EnsureTrigger(cabinet, new Vector2(1.2f, 1.4f));
+        EnsureTrigger(cabinet, new Vector2(1.2f, 0.4f));
 
         GameObject lockVisual = CreateInstalledLockVisual(cabinet, lockPickup);
         LockInstaller installer = GetOrAdd<LockInstaller>(cabinet);

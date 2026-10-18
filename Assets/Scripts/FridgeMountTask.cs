@@ -45,7 +45,7 @@ public class FridgeMountTask : MonoBehaviour, IInteractionPromptSource
     public bool TryGetInteractionPrompt(out string prompt)
     {
         bool canMount = !IsMounted && IsPreparationPhase();
-        prompt = canMount ? "E - Sabitle" : null;
+        prompt = canMount ? "E - Secure" : null;
         return canMount;
     }
 }

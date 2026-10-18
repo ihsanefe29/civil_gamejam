@@ -53,7 +53,7 @@ public class CollectibleItem : MonoBehaviour, IInteractionPromptSource
 
     public bool TryGetInteractionPrompt(out string prompt)
     {
-        prompt = IsAvailableToCollect ? "E - Topla" : null;
+        prompt = IsAvailableToCollect ? "E - Collect" : null;
         return prompt != null;
     }
 

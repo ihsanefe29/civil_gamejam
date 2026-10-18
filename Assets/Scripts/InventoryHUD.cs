@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InventoryHUD : MonoBehaviour
 {
     private readonly string[] itemIds = { "first_aid_kit", "battery", "water_bottle", "torch" };
-    private readonly string[] itemNames = { "İLK YARDIM", "PİL", "SU", "FENER" };
+    private readonly string[] itemNames = { "FIRST AID KIT", "BATTERY", "WATER BOTTLE", "TORCH" };
     private readonly string[] sceneObjectNames = { "First aid kit", "Battery", "Water bottle", "Torch" };
 
     private readonly Dictionary<string, Image> iconImages = new();

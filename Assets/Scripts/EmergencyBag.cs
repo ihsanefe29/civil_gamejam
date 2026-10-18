@@ -80,7 +80,7 @@ public class EmergencyBag : MonoBehaviour, IInteractionPromptSource
                           inventory != null &&
                           HasAcceptedItem(inventory);
 
-        prompt = canDeposit ? "E - Çantaya Koy" : null;
+        prompt = canDeposit ? "E - Add to Bag" : null;
         return canDeposit;
     }
 

@@ -57,9 +57,9 @@ public class EarlyEarthquakeNoticeUI : MonoBehaviour
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
 
-        CreateText(panelObject.transform, "Title", "TÜM HAZIRLIKLAR TAMAMLANDI!", 31,
+        CreateText(panelObject.transform, "Title", "PREPARATION COMPLETE!", 31,
             new Vector2(0f, 0.25f), new Vector2(1f, 1f), new Color(1f, 0.81f, 0.2f));
-        CreateText(panelObject.transform, "Subtitle", "DEPREM BAŞLIYOR...", 25,
+        CreateText(panelObject.transform, "Subtitle", "EARTHQUAKE STARTING...", 25,
             new Vector2(0f, 0f), new Vector2(1f, 0.48f), new Color(1f, 0.95f, 0.82f));
     }
 

@@ -16,6 +16,7 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
     [Header("Interaction")]
     [Tooltip("A portal remains non-interactable while it opens. This is the local collider size used when the scene binding creates the trigger at runtime.")]
     [SerializeField] private Vector2 interactionColliderSize = new(1.1f, 1.8f);
+
     [SerializeField, Min(0.1f)] private float directInteractionDistance = 2f;
 
     [Header("Optional Scene Transition")]
@@ -25,6 +26,7 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
     private EarthquakeLevelManager levelManager;
     private Collider2D portalCollider;
     private LevelCompleteUI levelCompleteUi;
+
     private bool portalOpened;
     private bool portalReady;
     private bool transitionRequested;
@@ -40,27 +42,28 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
         if (!portalOpened)
         {
             levelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
+
             if (levelManager != null &&
                 (levelManager.CurrentPhase == EarthquakePhase.Aftermath ||
                  levelManager.CurrentPhase == EarthquakePhase.Completed))
+            {
                 OpenPortal();
+            }
         }
 
-        // This is deliberately a fallback to PlayerInteraction. The portal
-        // must never become unusable merely because its prefab collider/tag
-        // was reimported or changed while the scene was being assembled.
+        // Fallback interaction: portal still works if its prefab/tag changed.
         if (portalReady && !transitionRequested && Input.GetKeyDown(KeyCode.E))
         {
             PlayerController player = FindFirstObjectByType<PlayerController>();
-            if (player != null && Vector2.Distance(player.transform.position, transform.position) <= directInteractionDistance)
+
+            if (player != null &&
+                Vector2.Distance(player.transform.position, transform.position) <= directInteractionDistance)
+            {
                 EnterPortal();
+            }
         }
     }
 
-    /// <summary>
-    /// Public so a future cutscene or UnityEvent can open the same portal,
-    /// without duplicating its animation/collider logic.
-    /// </summary>
     public void OpenPortal()
     {
         if (portalOpened)
@@ -75,17 +78,13 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
         nextSceneName = sceneName;
     }
 
-    /// <summary>
-    /// Called by the level's scene binder. Keeping this here makes the portal
-    /// self-sufficient even when the prefab itself has no gameplay components
-    /// saved on it yet.
-    /// </summary>
     public void ConfigureForLevel(EarthquakeLevelManager manager, string sceneName)
     {
         levelManager = manager != null ? manager : levelManager;
         ConfigureNextScene(sceneName);
 
         ResolveReferences();
+
         if (portalCollider is BoxCollider2D boxCollider)
         {
             boxCollider.size = interactionColliderSize;
@@ -109,13 +108,27 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
 
         transitionRequested = true;
         SetInteractionEnabled(false);
-        FindFirstObjectByType<PlayerController>()?.SetMovementLocked(true);
+
+        PlayerController player = FindFirstObjectByType<PlayerController>();
+
+        if (player != null)
+        {
+            // First stop movement, then hide the player as if they entered
+            // the portal. The Level Complete UI belongs to the portal, so it stays visible.
+            player.SetMovementLocked(true);
+            player.gameObject.SetActive(false);
+        }
 
         levelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
         levelManager?.CompleteLevel();
 
-        levelCompleteUi ??= GetComponent<LevelCompleteUI>() ?? gameObject.AddComponent<LevelCompleteUI>();
-        levelCompleteUi.Show(levelManager != null ? levelManager.TotalScore : 0, ContinueToNextFloor);
+        levelCompleteUi ??= GetComponent<LevelCompleteUI>() ??
+                            gameObject.AddComponent<LevelCompleteUI>();
+
+        levelCompleteUi.Show(
+            levelManager != null ? levelManager.TotalScore : 0,
+            ContinueToNextFloor
+        );
     }
 
     private void ContinueToNextFloor()
@@ -142,7 +155,7 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
 
     public bool TryGetInteractionPrompt(out string prompt)
     {
-        prompt = portalReady && !transitionRequested ? "E - Portaldan Geç" : null;
+        prompt = portalReady && !transitionRequested ? "E - Enter Portal" : null;
         return prompt != null;
     }
 
@@ -150,6 +163,7 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
     {
         portalCollider ??= GetComponent<Collider2D>();
         levelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
+
         if (portalCollider != null)
         {
             portalCollider.isTrigger = true;
@@ -159,12 +173,10 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
         gameObject.tag = "interactable";
 
         Interactable interactable = GetComponent<Interactable>();
+
         if (interactable == null)
             interactable = gameObject.AddComponent<Interactable>();
 
-        // Awake may be reached once through AddComponent and again after a
-        // script reload. Re-registering the same callback would make E invoke
-        // the portal transition more than once.
         interactable.onInteract?.RemoveListener(EnterPortal);
         interactable.AddListener(EnterPortal);
     }

@@ -28,7 +28,7 @@ public class EarthquakeCountdownUI : MonoBehaviour
             return;
 
         int remainingSeconds = Mathf.CeilToInt(levelManager.RemainingPreparationTime);
-        countdownText.text = $"DEPREME KALAN SÜRE\n{remainingSeconds:00} sn";
+        countdownText.text = $"EARTHQUAKE IN\n{remainingSeconds:00} sn";
     }
 
     private void CreateCountdown()

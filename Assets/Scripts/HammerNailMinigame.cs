@@ -48,12 +48,14 @@ public class HammerNailMinigame : MonoBehaviour
         task = mountTask;
         DisablePlayerControls();
         CreateInterface();
-        SetStatus("Çekiç sarı çizgideyken STOP düğmesine bas.");
+        SetStatus("Press STOP when the hammer is aligned with the nail.");
     }
 
     private void Update()
     {
         if (task == null || hammer == null) return;
+        EarthquakeLevelManager levelManager = FindFirstObjectByType<EarthquakeLevelManager>();
+        if(levelManager != null && levelManager.CurrentPhase != EarthquakePhase.Preparation) { Close(); return; }
         if (Input.GetKeyDown(KeyCode.Escape)) { Close(); return; }
 
         switch (hammerState)
@@ -80,7 +82,7 @@ public class HammerNailMinigame : MonoBehaviour
         strikeY = hammer.anchoredPosition.y;
         hammerState = HammerState.SlidingRight;
         stopButton.interactable = false;
-        SetStatus("Çekiç çiviye gidiyor...");
+        SetStatus("Hammer moving to nail...");
     }
 
     private void SlideHammer(Vector2 destination, UnityEngine.Events.UnityAction onReached)
@@ -99,7 +101,7 @@ public class HammerNailMinigame : MonoBehaviour
         if (Mathf.Abs(strikeY - TargetY) > Tolerance)
         {
             Flash(new Color(0.9f, 0.18f, 0.16f, 0.32f));
-            SetStatus("Iskaladın — çekiç sarı çizgiyle hizalanmalı.");
+            SetStatus("You missed — the hammer needs to be aligned with the yellow line.");
             ReturnHammer();
             return;
         }
@@ -109,12 +111,12 @@ public class HammerNailMinigame : MonoBehaviour
         Flash(new Color(0.35f, 1f, 0.45f, 0.34f));
         if (hits < RequiredHits)
         {
-            SetStatus("İsabet! Çivi biraz daha duvara girdi. Bir kez daha vur.");
+            SetStatus("Hit! The nail is a bit further into the wall. Hit it once more.");
             ReturnHammer();
             return;
         }
 
-        SetStatus("Buzdolabı güvenle duvara sabitlendi!");
+        SetStatus("Fridge secured to the wall!");
         task.CompleteMounting();
         hammerState = HammerState.Finished;
         // Keep the final nail artwork visible long enough for the player to
@@ -128,7 +130,7 @@ public class HammerNailMinigame : MonoBehaviour
     {
         hammerState = HammerState.Swinging;
         stopButton.interactable = true;
-        SetStatus("Çekiç sarı çizgideyken STOP düğmesine bas.");
+        SetStatus("Press STOP when the hammer is aligned with the nail.");
     }
 
     private void CreateInterface()
@@ -143,7 +145,7 @@ public class HammerNailMinigame : MonoBehaviour
 
         CreateImage(canvas.transform, "Overlay", Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0f, 0f, 0f, .7f));
         GameObject panel = CreateImage(canvas.transform, "Mount Panel", new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(760f, 640f), Vector2.zero, new Color(.13f, .09f, .055f, .98f));
-        CreateText(panel.transform, "Title", "BUZDOLABINI SABİTLE", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(-25f, -82f), new Vector2(25f, -12f), 36, TextAnchor.MiddleCenter, new Color(1f, .85f, .3f));
+        CreateText(panel.transform, "Title", "SECURE THE FRIDGE", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(-25f, -82f), new Vector2(25f, -12f), 36, TextAnchor.MiddleCenter, new Color(1f, .85f, .3f));
         board = CreateImage(panel.transform, "Hit Board", new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(620f, 390f), new Vector2(0f, -20f), new Color(.22f, .16f, .1f, 1f)).GetComponent<RectTransform>();
         CreateImage(board, "Wall", new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(180f, 310f), Vector2.zero, new Color(.57f, .5f, .4f, 1f));
         CreateNail();
@@ -151,7 +153,7 @@ public class HammerNailMinigame : MonoBehaviour
         feedback = CreateImage(board, "Strike Feedback", Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, Color.clear).GetComponent<Image>();
         status = CreateText(panel.transform, "Status", string.Empty, Vector2.zero, new Vector2(1f, 0f), new Vector2(22f, 20f), new Vector2(-22f, 92f), 24, TextAnchor.MiddleCenter, Color.white);
         CreateStopButton(panel.transform);
-        CreateText(panel.transform, "Cancel", "Vazgeçmek için ESC", Vector2.zero, new Vector2(1f, 0f), new Vector2(22f, 2f), new Vector2(-22f, 30f), 16, TextAnchor.MiddleCenter, new Color(.75f, .7f, .62f));
+        CreateText(panel.transform, "Cancel", "Press ESC to cancel", Vector2.zero, new Vector2(1f, 0f), new Vector2(22f, 2f), new Vector2(-22f, 30f), 16, TextAnchor.MiddleCenter, new Color(.75f, .7f, .62f));
     }
 
     private void CreateStopButton(Transform parent)

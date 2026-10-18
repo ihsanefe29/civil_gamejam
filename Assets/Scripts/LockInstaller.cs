@@ -59,7 +59,7 @@ public class LockInstaller : MonoBehaviour, IInteractionPromptSource
                           inventory != null &&
                           inventory.HasItem(requiredItemId);
 
-        prompt = canInstall ? "E - Kilitle" : null;
+        prompt = canInstall ? "E - Lock" : null;
         return canInstall;
     }
 }

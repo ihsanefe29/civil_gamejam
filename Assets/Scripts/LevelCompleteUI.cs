@@ -33,14 +33,14 @@ public class LevelCompleteUI : MonoBehaviour
         panelGroup.alpha = 1f;
         panelRect.anchoredPosition = Vector2.zero;
         panelRect.localScale = Vector3.one;
-        statusText.text = "Hazır olduğunda sonraki kata geç.";
+        statusText.text = "Ready to proceed to the next level.";
         statusText.color = new Color(0.86f, 0.82f, 0.68f, 1f);
-        continueLabel.text = "SONRAKİ KATA GEÇ";
+        continueLabel.text = "PROCEED TO NEXT LEVEL";
         continueButton.interactable = true;
 
         Text scoreText = panelRect.Find("Score")?.GetComponent<Text>();
         if (scoreText != null)
-            scoreText.text = $"Toplam Skor: {totalScore}";
+            scoreText.text = $"Total Score: {totalScore}";
     }
 
     public void ShowUnavailableDestination()
@@ -48,7 +48,7 @@ public class LevelCompleteUI : MonoBehaviour
         if (statusText == null || continueButton == null)
             return;
 
-        statusText.text = "Sonraki kat henüz hazırlanıyor.";
+        statusText.text = "The next level is not yet available.";
         statusText.color = new Color(1f, 0.76f, 0.32f, 1f);
         continueButton.interactable = true;
     }
@@ -131,12 +131,12 @@ public class LevelCompleteUI : MonoBehaviour
         panelRect = panel.GetComponent<RectTransform>();
         panelGroup = panel.AddComponent<CanvasGroup>();
 
-        CreateText(panel.transform, "Title", "BÖLÜM TAMAMLANDI", 37,
+        CreateText(panel.transform, "Title", "LEVEL COMPLETE", 37,
             new Vector2(0f, 1f), new Vector2(1f, 1f),
             new Vector2(22f, -94f), new Vector2(-22f, -26f),
             TextAnchor.MiddleCenter, new Color(1f, 0.84f, 0.25f));
 
-        CreateText(panel.transform, "Score", "Toplam Skor: 0", 31,
+        CreateText(panel.transform, "Score", "Total Score: 0", 31,
             new Vector2(0f, 0.5f), new Vector2(1f, 0.5f),
             new Vector2(22f, -22f), new Vector2(-22f, 38f),
             TextAnchor.MiddleCenter, Color.white);
@@ -159,7 +159,7 @@ public class LevelCompleteUI : MonoBehaviour
         buttonColors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.65f);
         continueButton.colors = buttonColors;
         continueButton.onClick.AddListener(HandleContinueButton);
-        continueLabel = CreateText(buttonObject.transform, "Label", "SONRAKİ KATA GEÇ", 24,
+        continueLabel = CreateText(buttonObject.transform, "Label", "GO TO NEXT LEVEL", 24,
             Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero,
             TextAnchor.MiddleCenter, Color.white);
     }
