@@ -519,7 +519,7 @@ Transform:
   m_GameObject: {fileID: 453819576}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.542669, y: 0.35792828, z: 0}
+  m_LocalPosition: {x: 9.428, y: 0.351, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -785,8 +785,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   damping: 0.2
-  leftBoundary: {fileID: 0}
-  rightBoundary: {fileID: 0}
+  leftBoundary: {fileID: 2042049292}
+  rightBoundary: {fileID: 453819577}
   groundBoundary: {fileID: 0}
   topBoundary: {fileID: 0}
   target: {fileID: 1905879867}
@@ -12913,7 +12913,7 @@ Transform:
   m_GameObject: {fileID: 2042049291}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.732331, y: 0.35992813, z: 0}
+  m_LocalPosition: {x: -9.53, y: 0.35992813, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14266,7 +14266,7 @@ PrefabInstance:
       objectReference: {fileID: 1219407276}
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: requiredEnemyKills
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: glassTargets.Array.size
@@ -14307,7 +14307,7 @@ PrefabInstance:
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'waterStations.Array.data[1]'
       value: 
-      objectReference: {fileID: 308207372}
+      objectReference: {fileID: 0}
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'waterStations.Array.data[2]'
       value: 
@@ -14315,7 +14315,7 @@ PrefabInstance:
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'waterStations.Array.data[3]'
       value: 
-      objectReference: {fileID: 1398726954}
+      objectReference: {fileID: 0}
     - target: {fileID: 4925136222272488732, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: m_Name
       value: levelTaskManager

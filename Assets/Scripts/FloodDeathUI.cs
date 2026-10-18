@@ -94,7 +94,7 @@ public class FloodDeathUI : MonoBehaviour
 
         CreateText(
             background.transform,
-            "ÖLDÜN",
+            "DIED!",
             64,
             new Vector2(0f, 140f),
             new Vector2(800f, 100f)

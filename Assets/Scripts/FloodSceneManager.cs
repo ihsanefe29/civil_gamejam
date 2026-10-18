@@ -30,6 +30,11 @@ public class FloodSceneManager : MonoBehaviour
     [SerializeField] private UnityEvent onFloodEnded;
     [SerializeField] private UnityEvent onLevelCompleted;
 
+    [Header("Player Death Animation")]
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private string deathTrigger = "died";
+    [SerializeField] private float deathAnimationDuration = 0.5f;
+
     public FloodPhase CurrentPhase { get; private set; }
         = FloodPhase.Intro;
 
@@ -105,7 +110,7 @@ public class FloodSceneManager : MonoBehaviour
         if (taskManager.FishInteractionCount <
             taskManager.RequiredFishInteractions)
         {
-            KillPlayer("Elektrik balýklarýnýn hepsini toplamadýn!");
+            KillPlayer("Failed to collect all eals!");
             return;
         }
 
@@ -173,21 +178,44 @@ public class FloodSceneManager : MonoBehaviour
 
     public bool IsDead { get; private set; }
 
+
     public void KillPlayer(string reason)
     {
         if (IsDead || CurrentPhase == FloodPhase.Completed)
             return;
 
+        IsDead = true;
+
+        StartCoroutine(PlayDeathSequence(reason));
+    }
+
+    private IEnumerator PlayDeathSequence(string reason)
+    {
+        // Start death animation
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetTrigger(deathTrigger);
+        }
+
+        // Wait until animation finishes
+        yield return new WaitForSecondsRealtime(
+            deathAnimationDuration
+        );
+
+        // Show death UI
         if (deathUI == null)
             deathUI = GetComponent<FloodDeathUI>();
 
-        if (deathUI == null)
+        if (deathUI != null)
         {
-            Debug.LogError("FloodManagers objesine FloodDeathUI ekle.");
-            return;
+            deathUI.ShowDeath(reason);
         }
-
-        IsDead = true;
-        deathUI.ShowDeath(reason);
+        else
+        {
+            Debug.LogError(
+                "FloodManagers objesinde FloodDeathUI bulunamadý!"
+            );
+        }
     }
+
 }

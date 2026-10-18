@@ -281,6 +281,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   maxJumpCount: 2
+  jumpCount: 0
 --- !u!114 &2389467150924673104
 MonoBehaviour:
   m_ObjectHideFlags: 0

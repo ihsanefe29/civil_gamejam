@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
     [SerializeField] private LayerMask detectionLayers = ~0;
 
     [Header("Appearance")]
-    [SerializeField] private string message = "E - Topla";
+    [SerializeField] private string message = "E - Interact";
     [SerializeField] private float worldOffset = 0.55f;
     [SerializeField] private float fadeSpeed = 9f;
 
@@ -27,7 +28,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        // Diðer sahnelerde bulunmayabilir; sorun deðil.
+        // FloodTaskManager may not exist in other scenes.
         floodTaskManager = FindFirstObjectByType<FloodTaskManager>();
 
         CreateUI();
@@ -62,7 +63,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
         promptText.text = GetMessage(target);
         promptText.fontSize = isPortal ? 26 : 19;
 
-        // Uzun metinlerde panel otomatik geniþler.
+        // Automatically expand the panel for longer messages.
         float width = Mathf.Max(
             isPortal ? 250f : 190f,
             promptText.preferredWidth + 24f
@@ -86,27 +87,27 @@ public class NearbyInteractionPrompt : MonoBehaviour
             return message;
 
         if (HasComponent<ExitPortal>(target))
-            return "E - Portala Gir";
+            return "E - Enter Portal";
 
         if (HasComponent<WaterStation>(target))
-            return "E - Su Doldur";
+            return "E - Refill Water";
 
         if (HasComponent<ElectricFish>(target))
-            return "E - Balýðý Topla";
+            return "E - Collect Fish";
 
         if (HasComponent<FloodCoin>(target))
-            return "E - Coin Topla";
+            return "E - Collect Coin";
 
         if (floodTaskManager != null)
         {
             if (MatchesTarget(target, floodTaskManager.Ladder))
-                return "E - Merdiveni Al";
+                return "E - Pick Up Ladder";
 
             if (MatchesTarget(target, floodTaskManager.Boat))
-                return "E - Kayýða Çýk";
+                return "E - Board Boat";
 
             if (MatchesTarget(target, floodTaskManager.Coin))
-                return "E - Düdük Balýðýný Topla";
+                return "E - Collect Whistle Fish";
         }
 
         return message;
@@ -146,7 +147,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
         {
             Transform candidate = hit.transform;
 
-            // Collider veya parent üzerinde tag bulunabilir.
+            // The interactable tag may be on a parent object.
             while (candidate != null &&
                    !candidate.CompareTag("interactable"))
             {

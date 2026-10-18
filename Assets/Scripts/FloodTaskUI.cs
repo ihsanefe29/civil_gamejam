@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class FloodTaskUI : MonoBehaviour
     private GameObject countdownRoot;
     private GameObject taskRoot;
     private GameObject resultRoot;
+
     private bool resultsHidden = false;
 
     private Text countdownText;
@@ -38,10 +40,14 @@ public class FloodTaskUI : MonoBehaviour
 
     private void LateUpdate()
     {
-        bool completed = sceneManager.CurrentPhase == FloodPhase.Completed;
-        bool intro = sceneManager.CurrentPhase == FloodPhase.Intro;
+        bool completed =
+            sceneManager.CurrentPhase == FloodPhase.Completed;
+
+        bool intro =
+            sceneManager.CurrentPhase == FloodPhase.Intro;
 
         resultRoot.SetActive(completed && !resultsHidden);
+
         if (completed && !endingTriggered)
         {
             endingTriggered = true;
@@ -52,8 +58,9 @@ public class FloodTaskUI : MonoBehaviour
             if (endingManager != null)
                 endingManager.StartEnding();
             else
-                Debug.LogError("EndingManager bulunamadý!");
+                Debug.LogError("EndingManager was not found!");
         }
+
         taskRoot.SetActive(!intro && !completed);
         countdownRoot.SetActive(!intro && !completed);
 
@@ -63,11 +70,11 @@ public class FloodTaskUI : MonoBehaviour
         if (completed)
         {
             resultText.text =
-                "BAÞARDIN!\n\n" +
-                "Düdük balýklarýný kullanarak\n" +
-                "dikkat çekmeyi baþardýn\n" +
-                "ve rüyandan kurtarýldýn!\n\n" +
-                $"Toplanan düdük balýðý: " +
+                "YOU DID IT!\n\n" +
+                "You used the whistle fish\n" +
+                "to attract attention\n" +
+                "and were rescued from your dream!\n\n" +
+                $"Whistle Fish Collected: " +
                 $"{taskManager.SpecialItemCount}/" +
                 $"{taskManager.RequiredSpecialItems}";
 
@@ -77,7 +84,8 @@ public class FloodTaskUI : MonoBehaviour
         if (intro)
             return;
 
-        bool preparing = sceneManager.CurrentPhase == FloodPhase.Preparation;
+        bool preparing =
+            sceneManager.CurrentPhase == FloodPhase.Preparation;
 
         float remaining = preparing
             ? sceneManager.RemainingPreparationTime
@@ -86,37 +94,38 @@ public class FloodTaskUI : MonoBehaviour
         int seconds = Mathf.CeilToInt(remaining);
 
         countdownText.text = preparing
-            ? $"SELE KALAN SÜRE\n{seconds:00} sn"
-            : $"SELÝN BÝTMESÝNE\n{seconds:00} sn";
+            ? $"TIME UNTIL THE FLOOD\n{seconds:00} sec"
+            : $"TIME UNTIL THE FLOOD ENDS\n{seconds:00} sec";
 
         if (preparing)
         {
             taskText.text =
-                "SEL HAZIRLIÐI\n\n" +
+                "FLOOD PREPARATION\n\n" +
                 TaskLine(
                     taskManager.FishInteractionCount >=
                     taskManager.RequiredFishInteractions,
-                    $"Balýklar: {taskManager.FishInteractionCount}" +
+                    $"Fish: {taskManager.FishInteractionCount}" +
                     $"/{taskManager.RequiredFishInteractions}"
                 ) + "\n" +
                 TaskLine(
-                    taskManager.HasLadder || taskManager.LadderDelivered,
-                    "Merdiveni al"
+                    taskManager.HasLadder ||
+                    taskManager.LadderDelivered,
+                    "Pick up the ladder"
                 ) + "\n" +
                 TaskLine(
                     taskManager.LadderDelivered,
-                    "Merdiveni kayýða taþý"
+                    "Carry the ladder to the boat"
                 ) +
-                $"\n\nToplam coin: {taskManager.SpecialItemCount}/3" +
+                $"\n\nTotal Coins: {taskManager.SpecialItemCount}/3" +
                 "\n\n" + ObjectiveText();
         }
         else
         {
             taskText.text =
-                "SEL PARKURU\n\n" +
-                $"Toplam düdük balýðý: {taskManager.SpecialItemCount}/3\n\n" +
+                "FLOOD OBSTACLE COURSE\n\n" +
+                $"Whistle Fish Collected: {taskManager.SpecialItemCount}/3\n\n" +
                 ObjectiveText() +
-                "\n\nSuya düþme!";
+                "\n\nDon't fall into the water!";
         }
     }
 
@@ -125,29 +134,27 @@ public class FloodTaskUI : MonoBehaviour
         switch (taskManager.CurrentStage)
         {
             case FloodObjectiveStage.InteractWithFish:
-                return "Þimdi: Balýklara yaklaþ ve E'ye bas.";
+                return "Current Objective: Approach the fish and press E.";
 
             case FloodObjectiveStage.TakeLadder:
-                return "Þimdi: Merdivene yaklaþ ve E'ye bas.";
+                return "Current Objective: Approach the ladder and press E.";
 
             case FloodObjectiveStage.CarryLadderToBoat:
-                return "Þimdi: Kayýða yaklaþ ve E'ye bas.";
+                return "Current Objective: Approach the boat and press E.";
 
             case FloodObjectiveStage.WaitForWater:
-                return "Su yükseliyor...";
+                return "The water is rising...";
 
             case FloodObjectiveStage.CollectSpecialItems:
-                return "Varillerden atla.\nE - Düdük Balýðýný Topla";
+                return "Jump across the barrels.\nE - Collect Whistle Fish";
 
             case FloodObjectiveStage.WaitForFloodEnd:
-                return "Düdük balýðý toplandý!";
+                return "Whistle fish collected!";
 
             default:
                 return "";
         }
     }
-
- 
 
     private static string TaskLine(bool done, string label)
     {
@@ -184,8 +191,10 @@ public class FloodTaskUI : MonoBehaviour
         );
 
         countdownText = CreateText(
-            countdownRoot.transform, 32,
-            TextAnchor.MiddleCenter, new Vector2(10f, 8f)
+            countdownRoot.transform,
+            32,
+            TextAnchor.MiddleCenter,
+            new Vector2(10f, 8f)
         );
 
         taskRoot = CreatePanel(
@@ -198,8 +207,10 @@ public class FloodTaskUI : MonoBehaviour
         );
 
         taskText = CreateText(
-            taskRoot.transform, 25,
-            TextAnchor.UpperLeft, new Vector2(22f, 18f)
+            taskRoot.transform,
+            25,
+            TextAnchor.UpperLeft,
+            new Vector2(22f, 18f)
         );
 
         resultRoot = CreatePanel(
@@ -211,7 +222,9 @@ public class FloodTaskUI : MonoBehaviour
             new Color(0f, 0f, 0f, 0.85f)
         );
 
-        RectTransform resultRect = resultRoot.GetComponent<RectTransform>();
+        RectTransform resultRect =
+            resultRoot.GetComponent<RectTransform>();
+
         resultRect.anchorMin = Vector2.zero;
         resultRect.anchorMax = Vector2.one;
         resultRect.offsetMin = Vector2.zero;
@@ -227,8 +240,10 @@ public class FloodTaskUI : MonoBehaviour
         );
 
         resultText = CreateText(
-            card.transform, 30,
-            TextAnchor.MiddleCenter, new Vector2(30f, 25f)
+            card.transform,
+            30,
+            TextAnchor.MiddleCenter,
+            new Vector2(30f, 25f)
         );
     }
 
@@ -241,12 +256,16 @@ public class FloodTaskUI : MonoBehaviour
         Color color)
     {
         GameObject panel = new GameObject(
-            name, typeof(RectTransform), typeof(Image)
+            name,
+            typeof(RectTransform),
+            typeof(Image)
         );
 
         panel.transform.SetParent(parent, false);
 
-        RectTransform rect = panel.GetComponent<RectTransform>();
+        RectTransform rect =
+            panel.GetComponent<RectTransform>();
+
         rect.anchorMin = anchor;
         rect.anchorMax = anchor;
         rect.pivot = anchor;
@@ -267,19 +286,27 @@ public class FloodTaskUI : MonoBehaviour
         Vector2 padding)
     {
         GameObject obj = new GameObject(
-            "Text", typeof(RectTransform), typeof(Text)
+            "Text",
+            typeof(RectTransform),
+            typeof(Text)
         );
 
         obj.transform.SetParent(parent, false);
 
-        RectTransform rect = obj.GetComponent<RectTransform>();
+        RectTransform rect =
+            obj.GetComponent<RectTransform>();
+
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;
         rect.offsetMin = padding;
         rect.offsetMax = -padding;
 
         Text text = obj.GetComponent<Text>();
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
+        text.font = Resources.GetBuiltinResource<Font>(
+            "LegacyRuntime.ttf"
+        );
+
         text.fontSize = fontSize;
         text.fontStyle = FontStyle.Bold;
         text.alignment = alignment;
@@ -290,11 +317,13 @@ public class FloodTaskUI : MonoBehaviour
 
         return text;
     }
+
     public void HideResults()
     {
         resultsHidden = true;
         resultRoot.SetActive(false);
     }
+
     private void OnDestroy()
     {
         if (canvasRoot != null)
