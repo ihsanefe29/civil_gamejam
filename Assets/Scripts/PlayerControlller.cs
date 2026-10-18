@@ -24,10 +24,9 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded;
     private bool facingRight = true;
     private bool movementLocked;
-
     public bool IsDead { get; private set; }
 
-    private int jumpCount = 0;
+    public int jumpCount = 0;
 
     private void Awake()
     {
