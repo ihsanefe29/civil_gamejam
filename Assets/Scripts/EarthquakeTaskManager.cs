@@ -19,6 +19,7 @@ public class EarthquakeTaskManager : MonoBehaviour
     private int lastLocks = -1;
     private int lastBagItems = -1;
     private bool lastFridgeSecured;
+    private bool earlyEarthquakeRequested;
 
     private void Start()
     {
@@ -56,5 +57,22 @@ public class EarthquakeTaskManager : MonoBehaviour
         lastBagItems = BagItemCount;
         lastFridgeSecured = IsFridgeSecured;
         StateChanged?.Invoke();
+
+        TryBeginEarthquakeWhenAllTasksAreComplete();
+    }
+
+    private void TryBeginEarthquakeWhenAllTasksAreComplete()
+    {
+        if (earlyEarthquakeRequested || levelManager == null ||
+            levelManager.CurrentPhase != EarthquakePhase.Preparation)
+            return;
+
+        bool allTasksComplete =
+            InstalledLockCount >= RequiredLocks &&
+            BagItemCount >= RequiredBagItems &&
+            IsFridgeSecured;
+
+        if (allTasksComplete && levelManager.BeginEarthquakeEarly())
+            earlyEarthquakeRequested = true;
     }
 }

@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class EmergencyBag : MonoBehaviour
+public class EmergencyBag : MonoBehaviour, IInteractionPromptSource
 {
     [SerializeField] private List<string> acceptedItemIds = new();
     [SerializeField] private bool preparationOnly = true;
@@ -71,6 +71,26 @@ public class EmergencyBag : MonoBehaviour
     public int GetStoredItemCount(string itemId)
     {
         return storedItemCounts.TryGetValue(itemId, out int count) ? count : 0;
+    }
+
+    public bool TryGetInteractionPrompt(out string prompt)
+    {
+        Inventory inventory = FindFirstObjectByType<Inventory>();
+        bool canDeposit = (!preparationOnly || IsPreparationPhase()) &&
+                          inventory != null &&
+                          HasAcceptedItem(inventory);
+
+        prompt = canDeposit ? "E - Add to Bag" : null;
+        return canDeposit;
+    }
+
+    private bool HasAcceptedItem(Inventory inventory)
+    {
+        foreach (string itemId in acceptedItemIds)
+            if (inventory.HasItem(itemId))
+                return true;
+
+        return false;
     }
 
     private bool IsPreparationPhase()

@@ -19,7 +19,8 @@ public class EarthquakeCountdownUI : MonoBehaviour
         if (levelManager == null || countdownRoot == null)
             return;
 
-        bool isPreparing = levelManager.CurrentPhase == EarthquakePhase.Preparation;
+        bool isPreparing = levelManager.CurrentPhase == EarthquakePhase.Preparation &&
+                           !levelManager.IsEarlyEarthquakeStarting;
         if (countdownRoot.activeSelf != isPreparing)
             countdownRoot.SetActive(isPreparing);
 
@@ -27,7 +28,7 @@ public class EarthquakeCountdownUI : MonoBehaviour
             return;
 
         int remainingSeconds = Mathf.CeilToInt(levelManager.RemainingPreparationTime);
-        countdownText.text = $"DEPREME KALAN SÜRE\n{remainingSeconds:00} sn";
+        countdownText.text = $"EARTHQUAKE IN\n{remainingSeconds:00} sn";
     }
 
     private void CreateCountdown()
