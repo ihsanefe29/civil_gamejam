@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded;
     private bool facingRight = true;
     private bool movementLocked;
+
     public bool IsDead { get; private set; }
 
     public int jumpCount = 0;
@@ -98,7 +99,18 @@ public class PlayerController : MonoBehaviour
             jumpCount == 0 &&
             Mathf.Abs(rb.linearVelocity.x) > 0.05f;
 
-        if (Level1AudioManager.Instance != null)
+        // Level 3 - Whale
+        if (Level3AudioManager.Instance != null)
+        {
+            Level3AudioManager.Instance.SetWalking(isWalking);
+        }
+        // Level 2 - Forest Fire
+        else if (Level2AudioManager.Instance != null)
+        {
+            Level2AudioManager.Instance.SetWalking(isWalking);
+        }
+        // Level 1 - Earthquake
+        else if (Level1AudioManager.Instance != null)
         {
             Level1AudioManager.Instance.SetWalking(isWalking);
         }
@@ -169,6 +181,16 @@ public class PlayerController : MonoBehaviour
 
     private void StopWalkingSound()
     {
+        if (Level3AudioManager.Instance != null)
+        {
+            Level3AudioManager.Instance.SetWalking(false);
+        }
+
+        if (Level2AudioManager.Instance != null)
+        {
+            Level2AudioManager.Instance.SetWalking(false);
+        }
+
         if (Level1AudioManager.Instance != null)
         {
             Level1AudioManager.Instance.SetWalking(false);
