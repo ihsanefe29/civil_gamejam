@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 2d262a15557cf584b931c0a79c8179c7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.005422
+      value: 0.5514911
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 2d262a15557cf584b931c0a79c8179c7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -138,5 +138,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45d096236fdc58d4ca53c6eb650a3f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBody: {fileID: 6784749571792124145, guid: a577f87abd8def043a8b9ea6615ac010, type: 3}
-  sceneManager: {fileID: 7081556474598152439, guid: dffe76bbb05063c43823f34aa60050f9, type: 3}

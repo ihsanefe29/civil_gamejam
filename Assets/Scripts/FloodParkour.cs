@@ -65,6 +65,8 @@ public class FloodParkour : MonoBehaviour
     private bool previousSimulated;
     private bool[] previousMovementStates;
 
+    public bool IsWaterVisible => spawnedWater != null;
+
     private void Awake()
     {
         sceneManager = GetComponent<FloodSceneManager>();

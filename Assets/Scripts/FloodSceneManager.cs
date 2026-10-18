@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-
+using System.Collections;
 public enum FloodPhase
 {
     Intro,
@@ -11,6 +11,8 @@ public enum FloodPhase
 
 public class FloodSceneManager : MonoBehaviour
 {
+    private bool endingFlood;
+
     [Header("References")]
     [SerializeField] private FloodTaskManager taskManager;
     [SerializeField] private FloodParkour parkour;
@@ -55,7 +57,7 @@ public class FloodSceneManager : MonoBehaviour
 
     private void Update()
     {
-        if (IsDead)
+        if (IsDead || endingFlood)
             return;
         if (CurrentPhase == FloodPhase.Preparation)
         {
@@ -119,18 +121,40 @@ public class FloodSceneManager : MonoBehaviour
 
     public void EndFlood()
     {
-        if (CurrentPhase != FloodPhase.Flood)
+        if (IsDead ||
+            endingFlood ||
+            CurrentPhase != FloodPhase.Flood)
+        {
             return;
+        }
 
-        CurrentPhase = FloodPhase.Intro;
+        endingFlood = true;
         RemainingFloodTime = 0f;
 
+        StartCoroutine(WaitForWaterToDisappear());
+    }
+
+    private IEnumerator WaitForWaterToDisappear()
+    {
         parkour.FinishFlood();
+
+        // Ýniþ animasyonu ve su prefabýnýn silinmesi beklenecek.
+        yield return new WaitUntil(
+            () => parkour == null || !parkour.IsWaterVisible
+        );
+
+        if (IsDead)
+        {
+            endingFlood = false;
+            yield break;
+        }
+
         onFloodEnded?.Invoke();
 
         if (taskManager.AllSpecialItemsCollected)
         {
             CurrentPhase = FloodPhase.Completed;
+
             taskManager.HandleLevelCompleted();
 
             Time.timeScale = 0f;
@@ -138,8 +162,11 @@ public class FloodSceneManager : MonoBehaviour
         }
         else
         {
+            CurrentPhase = FloodPhase.Intro;
             StartPreparationCycle();
         }
+
+        endingFlood = false;
     }
 
     [SerializeField] private FloodDeathUI deathUI;
