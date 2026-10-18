@@ -132,6 +132,11 @@ public class PortalReveal : MonoBehaviour
     private IEnumerator MoveCamera(Vector3 destination)
     {
         Vector3 origin = mainCamera.transform.position;
+
+        // Y ve Z sabit, sadece X deðiþir.
+        destination.y = origin.y;
+        destination.z = origin.z;
+
         float duration = Mathf.Max(0.01f, travelDuration);
         float elapsed = 0f;
 

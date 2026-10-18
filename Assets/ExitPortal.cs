@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ExitPortal : MonoBehaviour
@@ -169,14 +170,24 @@ public class ExitPortal : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
-
     private void NextLevel()
     {
-        // Connect the scene transition later.
-        Debug.Log("Next Level clicked!");
-        onNextLevel?.Invoke();
-    }
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextIndex = currentIndex + 1;
 
+        if (currentIndex < 0 ||
+            nextIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            Debug.LogError(
+                "Sonraki sahne bulunamadý. " +
+                "Build Profiles > Scene List sýralamasýný kontrol et."
+            );
+            return;
+        }
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(nextIndex);
+    }
     private Image CreateImage(string objectName, Transform parent, Color color)
     {
         GameObject obj = new GameObject(
