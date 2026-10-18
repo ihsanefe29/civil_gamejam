@@ -21,9 +21,15 @@ public class NearbyInteractionPrompt : MonoBehaviour
     private Text promptText;
     private Camera mainCamera;
 
+    private FloodTaskManager floodTaskManager;
+
     private void Awake()
     {
         mainCamera = Camera.main;
+
+        // Diðer sahnelerde bulunmayabilir; sorun deðil.
+        floodTaskManager = FindFirstObjectByType<FloodTaskManager>();
+
         CreateUI();
     }
 
@@ -32,16 +38,12 @@ public class NearbyInteractionPrompt : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
-        Transform target = FindClosestTarget();
+        Transform target = Time.timeScale > 0f
+            ? FindClosestTarget()
+            : null;
+
         bool visible = target != null && mainCamera != null;
-
-        bool isPortal = target != null &&
-            (target.GetComponentInParent<ExitPortal>() != null ||
-             target.GetComponentInChildren<ExitPortal>() != null);
-
-        bool isWaterStation = target != null &&
-            (target.GetComponentInParent<WaterStation>() != null ||
-             target.GetComponentInChildren<WaterStation>() != null);
+        bool isPortal = HasComponent<ExitPortal>(target);
 
         float offset = isPortal ? portalOffset : worldOffset;
 
@@ -57,17 +59,19 @@ public class NearbyInteractionPrompt : MonoBehaviour
                 promptRect.position = screenPosition;
         }
 
-        promptRect.sizeDelta = isPortal
-            ? new Vector2(250f, 60f)
-            : new Vector2(190f, 44f);
-
+        promptText.text = GetMessage(target);
         promptText.fontSize = isPortal ? 26 : 19;
 
-        promptText.text = isPortal
-            ? "E - Portala Gir"
-            : isWaterStation
-                ? "E - Su Doldur"
-                : message;
+        // Uzun metinlerde panel otomatik geniþler.
+        float width = Mathf.Max(
+            isPortal ? 250f : 190f,
+            promptText.preferredWidth + 24f
+        );
+
+        promptRect.sizeDelta = new Vector2(
+            width,
+            isPortal ? 60f : 44f
+        );
 
         canvasGroup.alpha = Mathf.MoveTowards(
             canvasGroup.alpha,
@@ -75,6 +79,58 @@ public class NearbyInteractionPrompt : MonoBehaviour
             fadeSpeed * Time.unscaledDeltaTime
         );
     }
+
+    private string GetMessage(Transform target)
+    {
+        if (target == null)
+            return message;
+
+        if (HasComponent<ExitPortal>(target))
+            return "E - Portala Gir";
+
+        if (HasComponent<WaterStation>(target))
+            return "E - Su Doldur";
+
+        if (HasComponent<ElectricFish>(target))
+            return "E - Balýðý Topla";
+
+        if (HasComponent<FloodCoin>(target))
+            return "E - Coin Topla";
+
+        if (floodTaskManager != null)
+        {
+            if (MatchesTarget(target, floodTaskManager.Ladder))
+                return "E - Merdiveni Al";
+
+            if (MatchesTarget(target, floodTaskManager.Boat))
+                return "E - Kayýða Çýk";
+
+            if (MatchesTarget(target, floodTaskManager.Coin))
+                return "E - Düdük Balýðýný Topla";
+        }
+
+        return message;
+    }
+
+    private static bool HasComponent<T>(Transform target)
+        where T : Component
+    {
+        return target != null &&
+            (target.GetComponentInParent<T>() != null ||
+             target.GetComponentInChildren<T>() != null);
+    }
+
+    private static bool MatchesTarget(
+        Transform target,
+        GameObject obj)
+    {
+        if (target == null || obj == null)
+            return false;
+
+        return target == obj.transform ||
+               target.IsChildOf(obj.transform);
+    }
+
     private Transform FindClosestTarget()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(
@@ -90,7 +146,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
         {
             Transform candidate = hit.transform;
 
-            // The tag may be on the collider or its parent.
+            // Collider veya parent üzerinde tag bulunabilir.
             while (candidate != null &&
                    !candidate.CompareTag("interactable"))
             {
@@ -99,6 +155,15 @@ public class NearbyInteractionPrompt : MonoBehaviour
 
             if (candidate == null)
                 continue;
+
+            Interactable interactable =
+                candidate.GetComponent<Interactable>();
+
+            if (interactable != null &&
+                !interactable.isActiveAndEnabled)
+            {
+                continue;
+            }
 
             Vector2 point = hit.ClosestPoint(transform.position);
 
@@ -120,6 +185,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
     {
         GameObject canvasObject = new GameObject(
             "Interaction Canvas",
+            typeof(RectTransform),
             typeof(Canvas),
             typeof(CanvasScaler)
         );
@@ -176,6 +242,7 @@ public class NearbyInteractionPrompt : MonoBehaviour
         promptText.fontSize = 19;
         promptText.fontStyle = FontStyle.Bold;
         promptText.alignment = TextAnchor.MiddleCenter;
+        promptText.horizontalOverflow = HorizontalWrapMode.Overflow;
         promptText.color = new Color(1f, 0.96f, 0.82f);
         promptText.raycastTarget = false;
         promptText.text = message;
@@ -196,6 +263,10 @@ public class NearbyInteractionPrompt : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        Gizmos.DrawWireSphere(
+            transform.position,
+            detectionRadius
+        );
     }
 }

@@ -589,6 +589,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   damping: 0.2
+  leftBoundary: {fileID: 0}
+  rightBoundary: {fileID: 0}
+  groundBoundary: {fileID: 0}
+  topBoundary: {fileID: 0}
   target: {fileID: 1905879867}
 --- !u!114 &573371046 stripped
 MonoBehaviour:
