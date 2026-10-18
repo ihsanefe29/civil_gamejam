@@ -206,16 +206,21 @@ public class FloodTaskManager : MonoBehaviour
                 break;
 
             case FloodObjectiveStage.CarryLadderToBoat:
-                if (obj != boat)
+                {
+                    if (obj != boat)
+                        return;
+
+                    hasLadder = false;
+                    ladderDelivered = true;
+
+                    obj.tag = "Untagged";
+
+                    // E etkileþimi burada gerçekleþtiði için oyuncu kayýða çýkar.
+                    parkour.BoardBoat();
+
+                    sceneManager.BeginFlood();
                     return;
-
-                hasLadder = false;
-                ladderDelivered = true;
-                obj.tag = "Untagged";
-
-                sceneManager.BeginFlood();
-                return;
-
+                }
             case FloodObjectiveStage.CollectSpecialItems:
                 if (obj != coin || coinCollectedThisFlood)
                     return;

@@ -9,24 +9,25 @@ public class FloodParkour : MonoBehaviour
     [Header("Player")]
     [SerializeField] private Rigidbody2D playerBody;
 
-    [Tooltip("Sadece oyuncunun hareket ve zýplama scriptlerini ekle.")]
+    [Tooltip("Oyuncunun hareket ve zýplama scriptlerini ekle.")]
     [SerializeField]
     private Behaviour[] movementScripts =
         new Behaviour[0];
 
-    [Header("Spawn Points")]
-    [Tooltip("Oyuncunun kayýk üstündeki baþlangýç konumu.")]
+    [Header("Boat")]
     [SerializeField] private Transform boatSpawnPoint;
 
-    [SerializeField] private Transform preparationSpawnPoint;
-
     [Header("Water")]
-    [SerializeField] private Transform waterVisual;
-    [SerializeField] private Transform waterLowPoint;
-    [SerializeField] private Transform waterHighPoint;
+    [SerializeField] private GameObject waterPrefab;
+    [SerializeField] private Transform waterSpawnPoint;
 
     [SerializeField, Min(0.1f)]
     private float riseDuration = 3f;
+
+    [SerializeField] private string lowerTrigger = "Lower";
+
+    [SerializeField, Min(0.1f)]
+    private float lowerDuration = 3f;
 
     [SerializeField] private FloodWaterDeath waterDeath;
 
@@ -42,9 +43,7 @@ public class FloodParkour : MonoBehaviour
     private float horizontalRandomness = 0.5f;
 
     [Header("Düdük Balýðý")]
-    [Tooltip("FloodCoin ve Interactable bulunan düdük balýðý prefabý.")]
     [SerializeField] private GameObject coinPrefab;
-
     [SerializeField] private Transform coinSpawnPoint;
 
     public bool IsReady { get; private set; }
@@ -53,11 +52,16 @@ public class FloodParkour : MonoBehaviour
     private FloodTaskManager taskManager;
 
     private Coroutine riseRoutine;
+    private Coroutine lowerWaterRoutine;
+
+    private GameObject spawnedWater;
+    private Animator spawnedWaterAnimator;
     private GameObject spawnedCoin;
 
     private readonly List<GameObject> barrels = new();
 
     private bool playerLocked;
+    private bool movementLockedForWaterEnd;
     private bool previousSimulated;
     private bool[] previousMovementStates;
 
@@ -68,13 +72,30 @@ public class FloodParkour : MonoBehaviour
 
         if (waterDeath != null)
             waterDeath.SetDangerous(false);
+    }
 
-        SetWaterLow();
+    // Sadece kayýða E ile etkileþim yapýldýðýnda çaðrýlýr.
+    public void BoardBoat()
+    {
+        if (playerBody == null || boatSpawnPoint == null)
+        {
+            Debug.LogError(
+                "FloodParkour: Player Body ve Boat Spawn Point ata.",
+                this
+            );
+            return;
+        }
+
+        MovePlayer(boatSpawnPoint.position);
     }
 
     public void StartFlood()
     {
         StopRise();
+        StopLoweringWater();
+        DestroySpawnedWater();
+
+        UnlockMovementAfterWaterEnd();
         UnlockPlayer();
 
         IsReady = false;
@@ -94,28 +115,15 @@ public class FloodParkour : MonoBehaviour
             return;
         }
 
-        // Su hareket ederken bu noktalar sabit kalmalý.
-        if (playerBody.transform.IsChildOf(waterVisual) ||
-            boatSpawnPoint.IsChildOf(waterVisual) ||
-            waterLowPoint.IsChildOf(waterVisual) ||
-            waterHighPoint.IsChildOf(waterVisual))
-        {
-            Debug.LogError(
-                "Player, BoatSpawnPoint, WaterLowPoint ve " +
-                "WaterHighPoint, WaterVisual'ýn altýnda olmamalý.",
-                this
-            );
-            return;
-        }
-
-        SetWaterLow();
-
+        // Oyuncu bulunduðu yerde kalýr.
+        // Burada kayýða ýþýnlama yapýlmaz.
         LockPlayer();
 
-        // Karakter sadece burada kayýða ýþýnlanýr.
-        MovePlayer(boatSpawnPoint.position);
-
-        Physics2D.SyncTransforms();
+        if (!SpawnWater())
+        {
+            UnlockPlayer();
+            return;
+        }
 
         riseRoutine = StartCoroutine(RaiseWater());
     }
@@ -123,11 +131,8 @@ public class FloodParkour : MonoBehaviour
     private bool ReferencesAreValid()
     {
         return playerBody != null &&
-               boatSpawnPoint != null &&
-               preparationSpawnPoint != null &&
-               waterVisual != null &&
-               waterLowPoint != null &&
-               waterHighPoint != null &&
+               waterPrefab != null &&
+               waterSpawnPoint != null &&
                waterDeath != null &&
                barrelPrefab != null &&
                firstBarrelPoint != null &&
@@ -136,11 +141,36 @@ public class FloodParkour : MonoBehaviour
                coinSpawnPoint != null;
     }
 
+    private bool SpawnWater()
+    {
+        spawnedWater = Instantiate(
+            waterPrefab,
+            waterSpawnPoint.position,
+            waterSpawnPoint.rotation
+        );
+
+        spawnedWaterAnimator =
+            spawnedWater.GetComponentInChildren<Animator>();
+
+        if (spawnedWaterAnimator == null)
+        {
+            Debug.LogError(
+                "Water prefab'ýnda Animator bulunamadý.",
+                waterPrefab
+            );
+
+            DestroySpawnedWater();
+            return false;
+        }
+
+        // Prefabýn varsayýlan yükselme animasyonu otomatik oynar.
+        spawnedWaterAnimator.speed = 1f;
+
+        return true;
+    }
+
     private IEnumerator RaiseWater()
     {
-        Vector3 low = waterLowPoint.position;
-        Vector3 high = waterHighPoint.position;
-
         float elapsed = 0f;
         float duration = Mathf.Max(0.1f, riseDuration);
 
@@ -154,18 +184,15 @@ public class FloodParkour : MonoBehaviour
             }
 
             elapsed += Time.deltaTime;
-
-            float t = Mathf.Clamp01(elapsed / duration);
-            float eased = Mathf.SmoothStep(0f, 1f, t);
-
-            // SADECE SU YÜKSELÝR.
-            // Oyuncunun ve kayýðýn konumu deðiþtirilmez.
-            waterVisual.position = Vector3.Lerp(low, high, eased);
-
             yield return null;
         }
 
-        waterVisual.position = high;
+        if (sceneManager.CurrentPhase != FloodPhase.Flood)
+        {
+            UnlockPlayer();
+            riseRoutine = null;
+            yield break;
+        }
 
         SpawnBarrels();
 
@@ -177,13 +204,14 @@ public class FloodParkour : MonoBehaviour
 
         spawnedCoin.SetActive(true);
 
-        // RegisterCoin hedefleri yenilediði için önce hazýr olmalý.
         IsReady = true;
         taskManager.RegisterCoin(spawnedCoin);
 
         Physics2D.SyncTransforms();
 
         ResetJumpCount();
+
+        // Aþaðýda kalan oyuncu suyla temas ederse ölür.
         waterDeath.SetDangerous(true);
         UnlockPlayer();
 
@@ -197,18 +225,52 @@ public class FloodParkour : MonoBehaviour
         IsReady = false;
 
         if (waterDeath != null)
-            waterDeath.SetDangerous(false);
+            waterDeath.SetDangerous(true);
 
         HideCoin();
         ClearBarrels();
-        SetWaterLow();
 
-        if (playerBody != null && preparationSpawnPoint != null)
-            MovePlayer(preparationSpawnPoint.position);
+        // Kontroller kapanýr ancak fizik açýk kalýr.
+        // Variller gidince oyuncu suya düþerse ölür.
+        LockMovementButKeepPhysics();
 
-        Physics2D.SyncTransforms();
+        StopLoweringWater();
 
-        UnlockPlayer();
+        if (spawnedWaterAnimator != null)
+        {
+            lowerWaterRoutine =
+                StartCoroutine(LowerWaterAndDestroy());
+        }
+        else
+        {
+            FinishWaterLowering();
+        }
+    }
+
+    private IEnumerator LowerWaterAndDestroy()
+    {
+        spawnedWaterAnimator.updateMode =
+            AnimatorUpdateMode.UnscaledTime;
+
+        spawnedWaterAnimator.SetTrigger(lowerTrigger);
+
+        yield return new WaitForSecondsRealtime(
+            Mathf.Max(0.1f, lowerDuration)
+        );
+
+        FinishWaterLowering();
+    }
+
+    private void FinishWaterLowering()
+    {
+        DestroySpawnedWater();
+        lowerWaterRoutine = null;
+
+        if (waterDeath != null)
+            waterDeath.SetDangerous(false);
+
+        // Oyuncuyu hiçbir yere ýþýnlama.
+        UnlockMovementAfterWaterEnd();
     }
 
     private void SpawnBarrels()
@@ -232,7 +294,6 @@ public class FloodParkour : MonoBehaviour
             float t = i / (float)(count - 1);
             Vector3 position = Vector3.Lerp(start, end, t);
 
-            // Ýlk ve son varilin konumu sabit.
             if (i > 0 && i < count - 1)
                 position.x += Random.Range(-jitter, jitter);
 
@@ -275,17 +336,8 @@ public class FloodParkour : MonoBehaviour
         barrels.Clear();
     }
 
-    private void SetWaterLow()
-    {
-        if (waterVisual != null && waterLowPoint != null)
-            waterVisual.position = waterLowPoint.position;
-    }
-
     private void MovePlayer(Vector3 position)
     {
-        if (playerBody == null)
-            return;
-
         playerBody.linearVelocity = Vector2.zero;
         playerBody.angularVelocity = 0f;
 
@@ -308,14 +360,8 @@ public class FloodParkour : MonoBehaviour
             controller.jumpCount = 0;
     }
 
-    private void LockPlayer()
+    private void SaveAndDisableMovement()
     {
-        if (playerLocked || playerBody == null)
-            return;
-
-        playerLocked = true;
-        previousSimulated = playerBody.simulated;
-
         previousMovementStates = new bool[movementScripts.Length];
 
         for (int i = 0; i < movementScripts.Length; i++)
@@ -328,6 +374,36 @@ public class FloodParkour : MonoBehaviour
             previousMovementStates[i] = script.enabled;
             script.enabled = false;
         }
+    }
+
+    private void RestoreMovement()
+    {
+        if (previousMovementStates == null)
+            return;
+
+        int count = Mathf.Min(
+            movementScripts.Length,
+            previousMovementStates.Length
+        );
+
+        for (int i = 0; i < count; i++)
+        {
+            Behaviour script = movementScripts[i];
+
+            if (script != null && script != this)
+                script.enabled = previousMovementStates[i];
+        }
+    }
+
+    private void LockPlayer()
+    {
+        if (playerLocked || playerBody == null)
+            return;
+
+        playerLocked = true;
+        previousSimulated = playerBody.simulated;
+
+        SaveAndDisableMovement();
 
         playerBody.linearVelocity = Vector2.zero;
         playerBody.angularVelocity = 0f;
@@ -348,15 +424,41 @@ public class FloodParkour : MonoBehaviour
             playerBody.simulated = previousSimulated;
         }
 
-        for (int i = 0; i < movementScripts.Length; i++)
+        RestoreMovement();
+    }
+
+    private void LockMovementButKeepPhysics()
+    {
+        if (movementLockedForWaterEnd)
+            return;
+
+        movementLockedForWaterEnd = true;
+
+        if (playerLocked)
         {
-            Behaviour script = movementScripts[i];
+            playerLocked = false;
 
-            if (script == null || script == this)
-                continue;
+            if (playerBody != null)
+            {
+                playerBody.linearVelocity = Vector2.zero;
+                playerBody.angularVelocity = 0f;
+                playerBody.simulated = previousSimulated;
+            }
 
-            script.enabled = previousMovementStates[i];
+            // Hareket scriptleri zaten kapalý.
+            return;
         }
+
+        SaveAndDisableMovement();
+    }
+
+    private void UnlockMovementAfterWaterEnd()
+    {
+        if (!movementLockedForWaterEnd)
+            return;
+
+        movementLockedForWaterEnd = false;
+        RestoreMovement();
     }
 
     private void StopRise()
@@ -368,16 +470,42 @@ public class FloodParkour : MonoBehaviour
         riseRoutine = null;
     }
 
+    private void StopLoweringWater()
+    {
+        if (lowerWaterRoutine == null)
+            return;
+
+        StopCoroutine(lowerWaterRoutine);
+        lowerWaterRoutine = null;
+    }
+
+    private void DestroySpawnedWater()
+    {
+        if (spawnedWater != null)
+        {
+            spawnedWater.SetActive(false);
+            Destroy(spawnedWater);
+        }
+
+        spawnedWater = null;
+        spawnedWaterAnimator = null;
+    }
+
     private void OnDisable()
     {
         StopRise();
+        StopLoweringWater();
+
         IsReady = false;
 
         if (waterDeath != null)
             waterDeath.SetDangerous(false);
 
         UnlockPlayer();
+        UnlockMovementAfterWaterEnd();
+
         ClearBarrels();
         HideCoin();
+        DestroySpawnedWater();
     }
 }
