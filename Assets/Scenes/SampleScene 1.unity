@@ -6054,6 +6054,17 @@ PolygonCollider2D:
       - {x: 0.14, y: 0.01}
       - {x: 0.14, y: 0.31}
   m_UseDelaunayMesh: 0
+--- !u!114 &818997799 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1615771663636275005, guid: a2490f5018b40214e99075f11c065611, type: 3}
+  m_PrefabInstance: {fileID: 263045603}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6c7ced0fd75e14e9874e1dc9599181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &854797498
 GameObject:
   m_ObjectHideFlags: 0
@@ -6945,6 +6956,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2142768366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1538189467 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1615771663636275005, guid: a2490f5018b40214e99075f11c065611, type: 3}
+  m_PrefabInstance: {fileID: 1782313057123720574}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6c7ced0fd75e14e9874e1dc9599181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1540666504
 GameObject:
   m_ObjectHideFlags: 0
@@ -14103,7 +14125,7 @@ PrefabInstance:
     - target: {fileID: 3335836027749862927, guid: 1975ce048124e6747b115493994ae8b0, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 19704494561b31345ab0b9b6afb18055, type: 2}
+      objectReference: {fileID: 9100000, guid: c9716ad55299c454284a3451f7091b35, type: 2}
     - target: {fileID: 5982092236138888394, guid: 1975ce048124e6747b115493994ae8b0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.58
@@ -14251,6 +14273,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
+      propertyPath: waterStations.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'emberTargets.Array.data[0]'
       value: 
       objectReference: {fileID: 53952727}
@@ -14277,15 +14303,19 @@ PrefabInstance:
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'waterStations.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1538189467}
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'waterStations.Array.data[1]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 308207372}
     - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: 'waterStations.Array.data[2]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 818997799}
+    - target: {fileID: 810585971814296891, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
+      propertyPath: 'waterStations.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1398726954}
     - target: {fileID: 4925136222272488732, guid: a8e971cf04f74504d9843d33a65f93cd, type: 3}
       propertyPath: m_Name
       value: levelTaskManager

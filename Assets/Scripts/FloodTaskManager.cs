@@ -52,7 +52,7 @@ public class FloodTaskManager : MonoBehaviour
     public int FishInteractionCount => allFish.Count - remainingFish.Count;
 
     public int SpecialItemCount => totalCoins;
-    public int RequiredSpecialItems => 3;
+    public int RequiredSpecialItems => 1;
 
     public GameObject Ladder => ladder;
     public GameObject Boat => boat;

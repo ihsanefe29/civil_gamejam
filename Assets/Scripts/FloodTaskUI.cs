@@ -12,10 +12,15 @@ public class FloodTaskUI : MonoBehaviour
     private GameObject countdownRoot;
     private GameObject taskRoot;
     private GameObject resultRoot;
+    private bool resultsHidden = false;
 
     private Text countdownText;
     private Text taskText;
     private Text resultText;
+
+    private bool endingTriggered = false;
+
+    [SerializeField] private EndingManager endingManager;
 
     private void Awake()
     {
@@ -36,7 +41,19 @@ public class FloodTaskUI : MonoBehaviour
         bool completed = sceneManager.CurrentPhase == FloodPhase.Completed;
         bool intro = sceneManager.CurrentPhase == FloodPhase.Intro;
 
-        resultRoot.SetActive(completed);
+        resultRoot.SetActive(completed && !resultsHidden);
+        if (completed && !endingTriggered)
+        {
+            endingTriggered = true;
+
+            if (endingManager == null)
+                endingManager = FindFirstObjectByType<EndingManager>();
+
+            if (endingManager != null)
+                endingManager.StartEnding();
+            else
+                Debug.LogError("EndingManager bulunamadý!");
+        }
         taskRoot.SetActive(!intro && !completed);
         countdownRoot.SetActive(!intro && !completed);
 
@@ -129,6 +146,8 @@ public class FloodTaskUI : MonoBehaviour
                 return "";
         }
     }
+
+ 
 
     private static string TaskLine(bool done, string label)
     {
@@ -271,7 +290,11 @@ public class FloodTaskUI : MonoBehaviour
 
         return text;
     }
-
+    public void HideResults()
+    {
+        resultsHidden = true;
+        resultRoot.SetActive(false);
+    }
     private void OnDestroy()
     {
         if (canvasRoot != null)
