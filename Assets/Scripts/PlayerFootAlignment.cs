@@ -19,6 +19,7 @@ public class PlayerFootAlignment : MonoBehaviour
     private Transform groundCheck;
     private float footOffsetFromRoot;
     private float footOffsetLocal;
+    private readonly RaycastHit2D[] groundHits = new RaycastHit2D[1];
 
     private IEnumerator Start()
     {
@@ -42,12 +43,25 @@ public class PlayerFootAlignment : MonoBehaviour
         RefreshFootOffset();
 
         Vector2 origin = new(x, transform.position.y + 5f);
-        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundRayDistance, groundLayer);
-        if (hit.collider == null)
+        // Table, cabinet and interaction colliders are triggers. They can be
+        // on the same layer as the room floor, but must never be treated as
+        // ground or the player would be snapped onto their sprite.
+        ContactFilter2D groundFilter = new();
+        groundFilter.SetLayerMask(groundLayer);
+        groundFilter.useTriggers = false;
+
+        int hitCount = Physics2D.Raycast(
+            origin,
+            Vector2.down,
+            groundFilter,
+            groundHits,
+            groundRayDistance);
+
+        if (hitCount == 0)
             return false;
 
         alignedPosition.x = x;
-        alignedPosition.y = hit.point.y - footOffsetFromRoot;
+        alignedPosition.y = groundHits[0].point.y - footOffsetFromRoot;
         return true;
     }
 

@@ -11,6 +11,7 @@ public class EarthquakeSceneBindings : MonoBehaviour
 
     private EarthquakeLevelManager levelManager;
     private PortalController portalController;
+    private GameObject portalInstance;
     private bool portalWarningLogged;
 
     private void Awake()
@@ -53,7 +54,12 @@ public class EarthquakeSceneBindings : MonoBehaviour
 
         if (levelManager.CurrentPhase == EarthquakePhase.Aftermath ||
             levelManager.CurrentPhase == EarthquakePhase.Completed)
+        {
+            if (portalInstance != null && !portalInstance.activeSelf)
+                portalInstance.SetActive(true);
+
             portalController.OpenPortal();
+        }
     }
 
     private static void ConfigurePlayerFootAlignment()
@@ -151,10 +157,17 @@ public class EarthquakeSceneBindings : MonoBehaviour
         }
 
         portalWarningLogged = false;
+        portalInstance = portal;
         EnsureTrigger(portal, new Vector2(1.1f, 1.8f));
         GetOrAdd<Interactable>(portal);
         portalController = GetOrAdd<PortalController>(portal);
         portalController.ConfigureForLevel(levelManager, portalNextSceneName);
+
+        // The portal's own Animator begins its opening clip when this object
+        // is enabled after the earthquake. Keep it inactive during gameplay
+        // instead of hiding renderers or sending Animator triggers.
+        if (levelManager != null && levelManager.CurrentPhase == EarthquakePhase.Preparation)
+            portal.SetActive(false);
     }
 
     private static GameObject FindPortalObject()

@@ -1,19 +1,16 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Keeps the level-exit portal hidden until the earthquake has ended, then
-/// exposes the existing portal Animator and interaction collider exactly once.
-/// The Animator Controller remains authored in Unity; this script only sends
-/// the open trigger configured by the artist.
+/// exposes the existing portal animation and interaction collider exactly once.
+/// The prefab starts its own authored animation when its GameObject is enabled;
+/// this script deliberately does not control Animator states or triggers.
 /// </summary>
 [DisallowMultipleComponent]
 public class PortalController : MonoBehaviour, IInteractionPromptSource
 {
-    [Header("Portal Animation")]
-    [SerializeField] private Animator portalAnimator;
-    [SerializeField] private string openTrigger = "open_portal";
+    [Header("Portal Timing")]
     [SerializeField, Min(0f)] private float openingDuration = 3f;
 
     [Header("Interaction")]
@@ -26,10 +23,8 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
     [SerializeField] private string nextSceneName;
 
     private EarthquakeLevelManager levelManager;
-    private SpriteRenderer[] portalRenderers;
     private Collider2D portalCollider;
     private LevelCompleteUI levelCompleteUi;
-    private PortalPromptUI portalPromptUi;
     private bool portalOpened;
     private bool portalReady;
     private bool transitionRequested;
@@ -37,7 +32,6 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
     private void Awake()
     {
         ResolveReferences();
-        SetPortalVisible(false);
         SetInteractionEnabled(false);
     }
 
@@ -63,19 +57,6 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
         }
     }
 
-    private void LateUpdate()
-    {
-        bool shouldShowPrompt = false;
-        if (portalReady && !transitionRequested)
-        {
-            PlayerController player = FindFirstObjectByType<PlayerController>();
-            shouldShowPrompt = player != null &&
-                Vector2.Distance(player.transform.position, transform.position) <= directInteractionDistance;
-        }
-
-        portalPromptUi?.SetVisible(shouldShowPrompt);
-    }
-
     /// <summary>
     /// Public so a future cutscene or UnityEvent can open the same portal,
     /// without duplicating its animation/collider logic.
@@ -86,11 +67,6 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
             return;
 
         portalOpened = true;
-        SetPortalVisible(true);
-
-        if (portalAnimator != null && HasAnimatorTrigger(openTrigger))
-            portalAnimator.SetTrigger(openTrigger);
-
         StartCoroutine(EnableInteractionAfterOpening());
     }
 
@@ -172,12 +148,8 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
 
     private void ResolveReferences()
     {
-        portalAnimator ??= GetComponent<Animator>();
         portalCollider ??= GetComponent<Collider2D>();
-        portalRenderers ??= GetComponentsInChildren<SpriteRenderer>(true);
         levelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
-        portalPromptUi ??= GetComponent<PortalPromptUI>() ?? gameObject.AddComponent<PortalPromptUI>();
-
         if (portalCollider != null)
         {
             portalCollider.isTrigger = true;
@@ -195,29 +167,6 @@ public class PortalController : MonoBehaviour, IInteractionPromptSource
         // the portal transition more than once.
         interactable.onInteract?.RemoveListener(EnterPortal);
         interactable.AddListener(EnterPortal);
-    }
-
-    private bool HasAnimatorTrigger(string triggerName)
-    {
-        if (portalAnimator == null || string.IsNullOrWhiteSpace(triggerName))
-            return false;
-
-        foreach (AnimatorControllerParameter parameter in portalAnimator.parameters)
-            if (parameter.type == AnimatorControllerParameterType.Trigger &&
-                parameter.name == triggerName)
-                return true;
-
-        return false;
-    }
-
-    private void SetPortalVisible(bool isVisible)
-    {
-        if (portalRenderers == null)
-            return;
-
-        foreach (SpriteRenderer renderer in portalRenderers)
-            if (renderer != null)
-                renderer.enabled = isVisible;
     }
 
     private void SetInteractionEnabled(bool isEnabled)

@@ -2,7 +2,12 @@ fileFormatVersion: 2
 guid: 549ca738e83ed7040a12eec1b4d66487
 ScriptedImporter:
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:AnimationClip
+      assembly: UnityEngine.AnimationModule
+      name: Bergamot Crouch_Clip
+    second: {fileID: 7400000, guid: 0fbd7e003620f4c888b576be893b3fa4, type: 2}
   serializedVersion: 2
   userData: 
   assetBundleName: 
@@ -98,7 +103,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 0
+  platformSettingsDirtyTick: 639278940877707310
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -125,8 +130,8 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_0
     originalName: 
-    pivot: {x: 0.65957445, y: -0.033898305}
-    alignment: 9
+    pivot: {x: 0.5, y: 1}
+    alignment: 2
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
@@ -146,8 +151,8 @@ ScriptedImporter:
     uvTransform: {x: 3, y: 129}
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.625, y: -0.033898305}
-    alignment: 9
+    pivot: {x: 0.5, y: 1}
+    alignment: 2
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
@@ -167,8 +172,8 @@ ScriptedImporter:
     uvTransform: {x: 1, y: 65}
   - name: Frame_2
     originalName: 
-    pivot: {x: 0.625, y: -0.035714287}
-    alignment: 9
+    pivot: {x: 0.5, y: 1}
+    alignment: 2
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
@@ -188,8 +193,8 @@ ScriptedImporter:
     uvTransform: {x: 63, y: 2}
   - name: Frame_3
     originalName: 
-    pivot: {x: 0.60975605, y: -0.040816326}
-    alignment: 9
+    pivot: {x: 0.5, y: 1}
+    alignment: 2
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
@@ -209,8 +214,8 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 198}
   - name: Frame_4
     originalName: 
-    pivot: {x: 0.43103448, y: 0}
-    alignment: 9
+    pivot: {x: 0.5, y: 1}
+    alignment: 2
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
@@ -294,6 +299,30 @@ ScriptedImporter:
     overridden: 0
     ignorePlatformSupport: 0
     maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
