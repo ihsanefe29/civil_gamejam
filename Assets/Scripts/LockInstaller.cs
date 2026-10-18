@@ -23,7 +23,8 @@ public class LockInstaller : MonoBehaviour, IInteractionPromptSource
     public void Install()
     {
         if (earthquakeLevelManager == null)
-            earthquakeLevelManager = FindFirstObjectByType<EarthquakeLevelManager>();
+            earthquakeLevelManager =
+                FindFirstObjectByType<EarthquakeLevelManager>();
 
         if (earthquakeLevelManager != null &&
             earthquakeLevelManager.CurrentPhase != EarthquakePhase.Preparation)
@@ -31,11 +32,22 @@ public class LockInstaller : MonoBehaviour, IInteractionPromptSource
 
         Inventory inventory = FindFirstObjectByType<Inventory>();
 
-        if (installed || inventory == null || !inventory.TryRemoveItem(requiredItemId))
+        if (installed || inventory == null ||
+            !inventory.TryRemoveItem(requiredItemId))
             return;
 
         installed = true;
         installedLockVisual?.SetActive(true);
+
+        // Kilit başarıyla takılınca sesi çal.
+        Level1AudioManager audioManager = Level1AudioManager.Instance;
+
+        if (audioManager == null)
+            audioManager = FindFirstObjectByType<Level1AudioManager>();
+
+        if (audioManager != null)
+            audioManager.PlayLock();
+
         earthquakeLevelManager?.AddTaskScore(scoreOnInstall);
         Installed?.Invoke();
         onInstalled?.Invoke();
@@ -45,17 +57,22 @@ public class LockInstaller : MonoBehaviour, IInteractionPromptSource
     {
         installedLockVisual = lockVisual;
         scoreOnInstall = score;
-        installedLockVisual.SetActive(false);
+
+        if (installedLockVisual != null)
+            installedLockVisual.SetActive(false);
     }
 
     public bool TryGetInteractionPrompt(out string prompt)
     {
-        earthquakeLevelManager ??= FindFirstObjectByType<EarthquakeLevelManager>();
+        earthquakeLevelManager ??=
+            FindFirstObjectByType<EarthquakeLevelManager>();
+
         Inventory inventory = FindFirstObjectByType<Inventory>();
 
         bool canInstall = !installed &&
                           (earthquakeLevelManager == null ||
-                           earthquakeLevelManager.CurrentPhase == EarthquakePhase.Preparation) &&
+                           earthquakeLevelManager.CurrentPhase ==
+                           EarthquakePhase.Preparation) &&
                           inventory != null &&
                           inventory.HasItem(requiredItemId);
 

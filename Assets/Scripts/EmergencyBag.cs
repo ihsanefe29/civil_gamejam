@@ -55,6 +55,11 @@ public class EmergencyBag : MonoBehaviour, IInteractionPromptSource
             storedItemCounts.TryGetValue(itemId, out int currentCount);
             storedItemCounts[itemId] = currentCount + 1;
             lastDepositFrame = Time.frameCount;
+            
+            Level1AudioManager.Instance?.PlayObjectPutDown();
+
+            ItemDeposited?.Invoke(StoredItemCount);
+            return true;
             ItemDeposited?.Invoke(StoredItemCount);
             return true;
         }
