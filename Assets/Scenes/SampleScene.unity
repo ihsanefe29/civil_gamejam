@@ -621,7 +621,7 @@ MonoBehaviour:
   - battery
   - torch
   portalObject: {fileID: 1387267115}
-  portalNextSceneName: 
+  portalNextSceneName: SampleScene 1
 --- !u!1 &911001
 GameObject:
   m_ObjectHideFlags: 0
@@ -4256,25 +4256,25 @@ PrefabInstance:
       propertyPath: m_text
       value: '1. Find 4 inventory items and pack your emergency bag.
 
-        
+
 
         2.
         Find 2 keys and lock the bedroom cabinets.
 
-        
 
-        3. Secure
-        the fridge by hitting the nail twice.
 
-        
+        3. Secure the fridge
+        by hitting the nail twice.
 
-        4. Finish within
-        60 seconds and hide under the table during the earthquake!
 
-        
 
-        5.
-        Enter the portal to reach the next level!'
+        4. Finish within 60 seconds and hide
+        under the table during the earthquake!
+
+
+
+        5. Enter the portal to
+        reach the next level!'
       objectReference: {fileID: 0}
     - target: {fileID: 7982194591329030218, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_fontSize

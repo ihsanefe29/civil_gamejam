@@ -1,8 +1,10 @@
+
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Reusable end-of-level score panel. It stays on screen until the player
@@ -11,6 +13,10 @@ using UnityEngine.UI;
 public class LevelCompleteUI : MonoBehaviour
 {
     [SerializeField, Min(0.1f)] private float portalPullDuration = 0.9f;
+
+    // NEXT SCENE
+    [Header("Next Level")]
+    [SerializeField] private string nextSceneName = "SampleScene 1";
 
     private Canvas canvas;
     private CanvasGroup overlayGroup;
@@ -63,10 +69,17 @@ public class LevelCompleteUI : MonoBehaviour
         StartCoroutine(PullRoutine(portal, onFinished));
     }
 
+    // NEXT LEVEL BUTTON
     private void HandleContinueButton()
     {
-        if (!exiting)
-            onContinue?.Invoke();
+        if (exiting)
+            return;
+
+        Level1AudioManager.Instance?.PlayButtonClick();
+
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(nextSceneName);
     }
 
     private IEnumerator PullRoutine(Transform portal, Action onFinished)
@@ -81,6 +94,7 @@ public class LevelCompleteUI : MonoBehaviour
 
         Vector2 startPosition = panelRect.anchoredPosition;
         Vector3 startScale = panelRect.localScale;
+
         for (float elapsed = 0f; elapsed < portalPullDuration; elapsed += Time.unscaledDeltaTime)
         {
             float progress = Mathf.Clamp01(elapsed / portalPullDuration);
@@ -89,6 +103,7 @@ public class LevelCompleteUI : MonoBehaviour
             panelRect.anchoredPosition = Vector2.Lerp(startPosition, targetPosition, eased);
             panelRect.localScale = Vector3.Lerp(startScale, Vector3.one * 0.05f, eased);
             panelGroup.alpha = 1f - eased;
+
             yield return null;
         }
 
@@ -108,6 +123,7 @@ public class LevelCompleteUI : MonoBehaviour
             typeof(Canvas),
             typeof(CanvasScaler),
             typeof(GraphicRaycaster));
+
         canvasObject.transform.SetParent(transform, false);
 
         canvas = canvasObject.GetComponent<Canvas>();
@@ -121,47 +137,99 @@ public class LevelCompleteUI : MonoBehaviour
 
         EnsureEventSystem();
 
-        GameObject overlay = CreateImage(canvas.transform, "Overlay", Vector2.zero, Vector2.one,
-            Vector2.zero, Vector2.zero, Color.black);
+        GameObject overlay = CreateImage(
+            canvas.transform,
+            "Overlay",
+            Vector2.zero,
+            Vector2.one,
+            Vector2.zero,
+            Vector2.zero,
+            Color.black);
+
         overlayGroup = overlay.AddComponent<CanvasGroup>();
 
-        GameObject panel = CreateImage(canvas.transform, "Level Complete Panel",
-            new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            new Vector2(650f, 405f), Vector2.zero, new Color(0.16f, 0.09f, 0.045f, 0.98f));
+        GameObject panel = CreateImage(
+            canvas.transform,
+            "Level Complete Panel",
+            new Vector2(0.5f, 0.5f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(650f, 405f),
+            Vector2.zero,
+            new Color(0.16f, 0.09f, 0.045f, 0.98f));
+
         panelRect = panel.GetComponent<RectTransform>();
         panelGroup = panel.AddComponent<CanvasGroup>();
 
-        CreateText(panel.transform, "Title", "LEVEL COMPLETE", 37,
-            new Vector2(0f, 1f), new Vector2(1f, 1f),
-            new Vector2(22f, -94f), new Vector2(-22f, -26f),
-            TextAnchor.MiddleCenter, new Color(1f, 0.84f, 0.25f));
+        CreateText(
+            panel.transform,
+            "Title",
+            "LEVEL COMPLETE",
+            37,
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(22f, -94f),
+            new Vector2(-22f, -26f),
+            TextAnchor.MiddleCenter,
+            new Color(1f, 0.84f, 0.25f));
 
-        CreateText(panel.transform, "Score", "Total Score: 0", 31,
-            new Vector2(0f, 0.5f), new Vector2(1f, 0.5f),
-            new Vector2(22f, -22f), new Vector2(-22f, 38f),
-            TextAnchor.MiddleCenter, Color.white);
+        CreateText(
+            panel.transform,
+            "Score",
+            "Total Score: 0",
+            31,
+            new Vector2(0f, 0.5f),
+            new Vector2(1f, 0.5f),
+            new Vector2(22f, -22f),
+            new Vector2(-22f, 38f),
+            TextAnchor.MiddleCenter,
+            Color.white);
 
-        statusText = CreateText(panel.transform, "Status", string.Empty, 19,
-            new Vector2(0f, 0f), new Vector2(1f, 0f),
-            new Vector2(25f, 94f), new Vector2(-25f, 134f),
-            TextAnchor.MiddleCenter, new Color(0.86f, 0.82f, 0.68f));
+        statusText = CreateText(
+            panel.transform,
+            "Status",
+            string.Empty,
+            19,
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(25f, 94f),
+            new Vector2(-25f, 134f),
+            TextAnchor.MiddleCenter,
+            new Color(0.86f, 0.82f, 0.68f));
 
-        GameObject buttonObject = CreateImage(panel.transform, "Continue Button",
-            new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-            new Vector2(310f, 66f), new Vector2(0f, 42f), new Color(0.2f, 0.62f, 0.32f, 1f));
+        GameObject buttonObject = CreateImage(
+            panel.transform,
+            "Continue Button",
+            new Vector2(0.5f, 0f),
+            new Vector2(0.5f, 0f),
+            new Vector2(310f, 66f),
+            new Vector2(0f, 42f),
+            new Color(0.2f, 0.62f, 0.32f, 1f));
+
         Image buttonImage = buttonObject.GetComponent<Image>();
+
         continueButton = buttonObject.AddComponent<Button>();
         continueButton.targetGraphic = buttonImage;
+
         ColorBlock buttonColors = continueButton.colors;
         buttonColors.normalColor = Color.white;
         buttonColors.highlightedColor = new Color(1f, 0.92f, 0.66f, 1f);
         buttonColors.pressedColor = new Color(0.75f, 0.75f, 0.75f, 1f);
         buttonColors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.65f);
         continueButton.colors = buttonColors;
+
         continueButton.onClick.AddListener(HandleContinueButton);
-        continueLabel = CreateText(buttonObject.transform, "Label", "GO TO NEXT LEVEL", 24,
-            Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero,
-            TextAnchor.MiddleCenter, Color.white);
+
+        continueLabel = CreateText(
+            buttonObject.transform,
+            "Label",
+            "GO TO NEXT LEVEL",
+            24,
+            Vector2.zero,
+            Vector2.one,
+            Vector2.zero,
+            Vector2.zero,
+            TextAnchor.MiddleCenter,
+            Color.white);
     }
 
     private static GameObject CreateImage(
@@ -173,15 +241,22 @@ public class LevelCompleteUI : MonoBehaviour
         Vector2 position,
         Color color)
     {
-        GameObject result = new GameObject(objectName, typeof(RectTransform), typeof(Image));
+        GameObject result = new GameObject(
+            objectName,
+            typeof(RectTransform),
+            typeof(Image));
+
         result.transform.SetParent(parent, false);
+
         RectTransform rect = result.GetComponent<RectTransform>();
         rect.anchorMin = anchorMin;
         rect.anchorMax = anchorMax;
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = size;
         rect.anchoredPosition = position;
+
         result.GetComponent<Image>().color = color;
+
         return result;
     }
 
@@ -197,8 +272,13 @@ public class LevelCompleteUI : MonoBehaviour
         TextAnchor alignment,
         Color color)
     {
-        GameObject result = new GameObject(objectName, typeof(RectTransform), typeof(Text));
+        GameObject result = new GameObject(
+            objectName,
+            typeof(RectTransform),
+            typeof(Text));
+
         result.transform.SetParent(parent, false);
+
         RectTransform rect = result.GetComponent<RectTransform>();
         rect.anchorMin = anchorMin;
         rect.anchorMax = anchorMax;
@@ -212,6 +292,7 @@ public class LevelCompleteUI : MonoBehaviour
         text.fontStyle = FontStyle.Bold;
         text.alignment = alignment;
         text.color = color;
+
         return text;
     }
 
@@ -220,6 +301,9 @@ public class LevelCompleteUI : MonoBehaviour
         if (FindFirstObjectByType<EventSystem>() != null)
             return;
 
-        new GameObject("Level Complete Event System", typeof(EventSystem), typeof(StandaloneInputModule));
+        new GameObject(
+            "Level Complete Event System",
+            typeof(EventSystem),
+            typeof(StandaloneInputModule));
     }
 }
