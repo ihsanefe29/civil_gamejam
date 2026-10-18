@@ -1958,6 +1958,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   damping: 0.2
+  leftBoundary: {fileID: 0}
+  rightBoundary: {fileID: 0}
+  groundBoundary: {fileID: 0}
+  topBoundary: {fileID: 0}
   target: {fileID: 1905879867}
 --- !u!114 &519420034
 MonoBehaviour:
@@ -4144,6 +4148,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 900
       objectReference: {fileID: 0}
+    - target: {fileID: 2178923304986432396, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178923304986432396, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -4
+      objectReference: {fileID: 0}
     - target: {fileID: 2411939557295392805, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_SizeDelta.x
       value: 900
@@ -4242,11 +4254,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831849290638809258, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: -32
       objectReference: {fileID: 0}
     - target: {fileID: 5831849290638809258, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 23
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 6112978424558976978, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_Name
@@ -4254,31 +4266,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7982194591329030218, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_text
-      value: '1. Find 4 inventory items and pack your emergency bag.
+      value: 'Find 4 inventory items and pack your emergency bag.
 
 
-
-        2.
-        Find 2 keys and lock the bedroom cabinets.
-
+        Find
+        2 keys and lock the bedroom cabinets.
 
 
-        3. Secure the fridge
-        by hitting the nail twice.
+        Secure the fridge by hitting
+        the nail twice.
 
 
-
-        4. Finish within 60 seconds and hide
-        under the table during the earthquake!
-
+        Finish within 60 seconds and hide under the table
+        during the earthquake!
 
 
-        5. Enter the portal to
-        reach the next level!'
+        Enter the portal to reach the next level!'
       objectReference: {fileID: 0}
     - target: {fileID: 7982194591329030218, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_fontSize
       value: 37
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982194591329030218, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
+      propertyPath: m_margin.z
+      value: -82.89938
       objectReference: {fileID: 0}
     - target: {fileID: 7982194591329030218, guid: 72603594ecb1cbe48b944845fff755a9, type: 3}
       propertyPath: m_fontSizeBase

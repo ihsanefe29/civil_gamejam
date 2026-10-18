@@ -22,25 +22,27 @@ public class LevelIntroController : MonoBehaviour
     [SerializeField] private Button nextButton;
     [SerializeField] private Button previousButton;
 
+    [Header("Optional Ending Animation")]
+    [SerializeField] private WhaleIntroAnimation whaleAnimation;
+
     private int currentPage = 0;
     private bool levelStarted = false;
+    private bool transitionStarted = false;
 
     private IEnumerator Start()
     {
-        // Pause gameplay during introduction.
         Time.timeScale = 0f;
 
         levelIntroCanvas.SetActive(true);
-
-        // Display only the cover for 3 seconds.
         coverBackground.SetActive(true);
         levelCover.SetActive(true);
         welcomePanel.SetActive(false);
 
-        // Real-time waiting works while the game is paused.
+        if (whaleAnimation != null)
+            whaleAnimation.gameObject.SetActive(false);
+
         yield return new WaitForSecondsRealtime(coverDuration);
 
-        // Keep the tree cover behind the welcome panel.
         coverBackground.SetActive(true);
         levelCover.SetActive(true);
         welcomePanel.SetActive(true);
@@ -55,13 +57,13 @@ public class LevelIntroController : MonoBehaviour
         storyPage.SetActive(page == 0);
         controlsPage.SetActive(page == 1);
 
-        // Hide previous button on the first page.
         previousButton.gameObject.SetActive(page > 0);
     }
 
     public void NextPage()
     {
-        if (levelStarted) return;
+        if (levelStarted || transitionStarted)
+            return;
 
         if (currentPage == 0)
         {
@@ -69,36 +71,53 @@ public class LevelIntroController : MonoBehaviour
         }
         else
         {
-            StartLevel();
+            if (whaleAnimation != null)
+                StartCoroutine(PlayWhaleThenStart());
+            else
+                StartLevel();
         }
     }
 
     public void PreviousPage()
     {
+        if (levelStarted || transitionStarted)
+            return;
+
         if (currentPage > 0)
-        {
             ShowPage(currentPage - 1);
-        }
     }
+private IEnumerator PlayWhaleThenStart()
+{
+    transitionStarted = true;
+
+    // Hide intro visuals
+    welcomePanel.SetActive(false);
+    levelCover.SetActive(false);
+    coverBackground.SetActive(false);
+
+    // Play whale animation
+    yield return StartCoroutine(
+        whaleAnimation.PlayAnimation()
+    );
+
+    // Start gameplay after animation
+    StartLevel();
+}
 
     private void StartLevel()
     {
-        if (levelStarted) return;
+        if (levelStarted)
+            return;
 
         levelStarted = true;
-
-        // Hide the entire introduction UI.
         levelIntroCanvas.SetActive(false);
-
-        // Resume gameplay and earthquake timer.
         Time.timeScale = 1f;
 
-        Debug.Log("Level 1 started!");
+        Debug.Log("Level started!");
     }
 
     private void OnDestroy()
     {
-        // Restore time if this scene is unloaded during intro.
         Time.timeScale = 1f;
     }
 }
