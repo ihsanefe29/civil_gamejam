@@ -11591,6 +11591,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: interactable
       objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 7f82d3eebea434eda8561ed0ae057d9e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 7f82d3eebea434eda8561ed0ae057d9e, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.61993
@@ -11808,7 +11812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4125669465265635775, guid: be25ba6ea505440428ea1bb1bfda6bdb, type: 3}
       propertyPath: preparationDuration
-      value: 1
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4125669465265635775, guid: be25ba6ea505440428ea1bb1bfda6bdb, type: 3}
       propertyPath: faultyLocations.Array.size
